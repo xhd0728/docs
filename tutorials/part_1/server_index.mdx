@@ -1,0 +1,104 @@
+---
+title: "认识 Server：模块化 RAG 的构建基石"
+---
+
+## 什么是Sever?
+
+在传统 RAG 系统中，我们通常会将系统拆解为多个功能模块，例如：检索器（Retriever）、生成器（Generator）等。这些模块承担不同任务，通过某种流程编排，协同完成复杂的问答与推理任务。
+
+在 UltraRAG 2.0 中，我们基于 MCP（Model Context Protocol） 架构，对这类模块进行了统一封装，提出了更加标准化的实现方式——Server。
+
+> Server 本质上就是一个具备独立功能的 RAG 模块组件。
+
+每个 Server 封装一类核心任务逻辑（如检索、生成、评估等），并通过工具函数（Tool）对外提供标准化接口，支持在完整的推理流程（pipeline）中被灵活调度和组合使用。
+
+## 快速上手：用 Calculator 示例开发一个 Server
+
+为了帮助你理解 Server 的使用方式，我们将以实现一个简单的“计算器”模块为例，展示 Server 的完整开发流程。
+
+### 第一步：创建 Calculator Server
+
+我们首先通过 UltraRAG_MCP_Server 实例化一个名为 calculator 的 Server：
+
+```python
+# servers/calculator/src/calculator.py
+
+from ultrarag_mcp.server import UltraRAG_MCP_Server
+
+app = UltraRAG_MCP_Server("calculator")
+
+if __name__ == "__main__":
+    app.run(transport="stdio")
+```
+
+### 第二步：实现工具函数（Tool）
+
+使用 @app.tool 装饰器注册工具函数，这些函数将在 pipeline 中被调用。
+
+```python
+from ultrarag_mcp.server import UltraRAG_MCP_Server
+
+app = UltraRAG_MCP_Server("calculator")
+
+@app.tool(output="a,b->result")
+def add(a: float, b: float) -> Dict[str, float]:
+    """Return the sum of a and b"""
+    return {"result": a + b}
+
+@app.tool(output="result")
+def minus(a: float, b: float) -> Dict[str, float]:
+    """Return a - b"""
+    return {"result": a - b}
+    
+@app.tool(output="a,b->None")
+def log(a: float, b: float) -> None:
+   """Logging a, b"""
+   app.logger.info(f"a: {a}, b:{b}")
+
+if __name__ == "__main__":
+    app.run(transport="stdio")
+```
+
+### 第三步：配置参数文件
+
+创建参数配置文件 servers/calculator/parameter.yaml，用于标明参数并注入默认值：
+
+```yaml
+# servers/calculator/parameter.yaml
+a: 1
+b: 2
+```
+
+### 封装为类以支持状态管理
+
+在某些场景我们可能希望在 Server 内部维护一些共享的状态或变量，比如初始化模型，可以将 Server 封装为一个类。以下是将 Calculator Server 封装为类的示例：
+
+```python
+from ultrarag_mcp.server import UltraRAG_MCP_Server
+
+app = UltraRAG_MCP_Server("calculator")
+
+class Calculator:
+    def __init__(self, mcp_inst: UltraRAG_MCP_Server)
+        mcp_inst.tool(self.add, output="b->result")
+        mcp_inst.tool(self.minus, output="result")
+        mcp_inst.tool(self.log, output="none")
+        self.a = 10  # 模拟全局变量
+        
+    def add(self, b: float) -> Dict[str, float]:
+        return {"result": self.a + b}
+        
+    def minus(self, b: float) -> Dict[str, float]:
+        return {"result": self.a - b}
+    
+    def log(self, b: float):
+        app.logger.info(f"a: {a}, b:{b}")
+ 
+if __name__ == "__main__":
+    Calculator(app)
+    app.run(transport="stdio")
+```
+
+以上内容展示了如何开发一个自定义 Server，并实现其中的工具函数（Tool）。你可以使用这种方式将任意功能封装为模块组件，并在 UltraRAG 的 pipeline 中进行组合调用。
+
+在接下来的小节中，我们将介绍 UltraRAG 中最常用的几个内置 Server，帮助你快速搭建自己的 RAG 流程。
