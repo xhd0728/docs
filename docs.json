@@ -41,7 +41,11 @@
           {
             "group": "📙 Part 2：从串行到分支，RAG 推理流程全掌握",
             "pages": [
-              "tutorials/part_2/index"
+              "tutorials/part_2/pipeline",
+              "tutorials/part_2/serial",
+              "tutorials/part_2/loop",
+              "tutorials/part_2/branch",
+              "tutorials/part_2/data_and_params"
             ]
           },
           {
@@ -55,6 +59,12 @@
             "pages": [
               "tutorials/part_4/index"
             ]
+          },
+          {
+            "group": "📘Part 5：UltraRAG开发实战",
+            "pages": [
+              "tutorials/part_5/index"
+            ]
           }
         ]
       },
@@ -62,18 +72,9 @@
         "tab": "SDK Reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "SDK Reference",
             "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "sdk/index"
             ]
           }
         ]
