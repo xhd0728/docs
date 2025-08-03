@@ -2,15 +2,15 @@
 title: "Quick Start"
 ---
 
-本节将通过一个最小可运行示例 sayhello，帮助你快速了解 UltraRAG 的核心使用方式，包括：
+本节将通过一个最小可运行示例 **sayhello**，帮助你快速了解 UltraRAG 的核心使用方式，包括：
 
 - Pipeline 配置文件的基本结构
 - 如何修改参数
 - 如何运行完整流程
 
-📌 提示：如果尚未安装 UltraRAG，请先参考 Installation。
-
-📚 更复杂的 RAG 实践，请前往 Tutorials 查看。
+> 📌 **提示**：如果尚未安装 UltraRAG，请先参考 [Installation](/getting_started/installation)。
+> \
+> 📚 更复杂的 RAG 实践，请前往 [Tutorials](/tutorials/part_1/server_index) 查看。
 
 ## Step 1：了解 Pipeline 配置结构
 
@@ -33,7 +33,7 @@ pipeline:
 
 ## Step 2：实现一个 MCP Server
 
-sayhello 是一个超简洁的 MCP Server，包含一个名为 greet 的 Tool：
+sayhello 是一个超简洁的 MCP Server，包含一个名为 `greet` 的 Tool：
 
 ```python
 from typing import Dict
@@ -63,9 +63,9 @@ if __name__ == "__main__":
 ```
 可以看到：
 
-- 工具 greet 接收一个 name 作为输入
-- 返回的 greeting 信息被命名为 msg
-- 使用装饰器 @app.tool(output="name->msg") 定义输入输出字段
+- 工具 `greet` 接收一个 `name` 作为输入
+- 返回的 `greeting` 信息被命名为 `msg`
+- 使用装饰器 `@app.tool(output="name->msg")` 定义输入输出字段
 
 ## Step 3：构建参数文件
 
@@ -77,7 +77,7 @@ ultrarag build examples/sayhello.yaml
 
 终端输出：
 
-![](images/getting_started/sayhello_build.png)
+![](/images/getting_started/sayhello_build.png)
 
 你将获得 examples/parameters/sayhello_parameter.yaml，内容如下：
 
@@ -98,4 +98,4 @@ ultrarag run examples/sayhello.yaml
 
 你将在终端和日志文件看到类似输出：
 
-![](images/getting_started/sayhello_run.png)
+![](/images/getting_started/sayhello_run.png)
