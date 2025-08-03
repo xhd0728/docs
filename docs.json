@@ -20,35 +20,46 @@
               "getting_started/installation",
               "getting_started/quick_start"
             ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
           }
         ]
       },
       {
         "tab": "Tutorials",
+        "groups": [
+          {
+            "group": "📗 Part 1：构建属于你的 RAG 组件，Server 与 Tool 开发指南",
+            "pages": [
+              "tutorials/part_1/server_index",
+              "tutorials/part_1/benchmark",
+              "tutorials/part_1/retriever",
+              "tutorials/part_1/prompt",
+              "tutorials/part_1/generation",
+              "tutorials/part_1/evaluation",
+              "tutorials/part_1/custom"
+            ]
+          },
+          {
+            "group": "📙 Part 2：从串行到分支，RAG 推理流程全掌握",
+            "pages": [
+              "tutorials/part_2/index"
+            ]
+          },
+          {
+            "group": "📓 Part 3：数据构建与基线复现",
+            "pages": [
+              "tutorials/part_3/index"
+            ]
+          },
+          {
+            "group": "📒 Part 4：开发进阶与部署指南（高级用法篇）",
+            "pages": [
+              "tutorials/part_4/index"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "SDK Reference",
         "groups": [
           {
             "group": "API documentation",
@@ -72,37 +83,28 @@
       "anchors": [
         {
           "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
+          "href": "https://ultrarag.mintlify.app/",
           "icon": "book-open-cover"
         },
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "GitHub",
+          "href": "https://github.com/ultrarag/UltraRAG-MCP",
+          "icon": "github"
         }
       ]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Leaderboard",
+        "href": "https://avviynpudtv.feishu.cn/wiki/Bn6nwxDChir8K0ktwELcuLO0nrc?from=from_copylink"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "GitHub",
+      "href": "https://github.com/ultrarag/UltraRAG-MCP"
     }
   },
   "contextual": {
@@ -119,9 +121,7 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/ultrarag/UltraRAG-MCP"
     }
   }
 }
