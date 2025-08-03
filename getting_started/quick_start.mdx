@@ -1,0 +1,101 @@
+---
+title: "Quick Start"
+---
+
+本节将通过一个最小可运行示例 sayhello，帮助你快速了解 UltraRAG 的核心使用方式，包括：
+
+- Pipeline 配置文件的基本结构
+- 如何修改参数
+- 如何运行完整流程
+
+📌 提示：如果尚未安装 UltraRAG，请先参考 Installation。
+
+📚 更复杂的 RAG 实践，请前往 Tutorials 查看。
+
+## Step 1：了解 Pipeline 配置结构
+
+以下是一个最简示例配置文件 examples/sayhello.yaml：
+
+```yaml
+servers:
+  sayhello: servers/sayhello
+
+pipeline:
+  - sayhello.greet
+```
+
+这个配置文件包含两个主要部分：
+
+| 字段       | 含义                                                                  |
+| --------- | --------------------------------------------------------------------- |
+| servers   | 声明本次流程中所使用的 Server 模块。本例中使用了名为 sayhello 的 toy server。 |
+| pipeline  | 定义执行流程，每一项表示调用某个 Server 中注册的 Tool。本例调用了 greet 工具。  |
+
+## Step 2：实现一个 MCP Server
+
+sayhello 是一个超简洁的 MCP Server，包含一个名为 greet 的 Tool：
+
+```python
+from typing import Dict
+from ultrarag_mcp.server import UltraRAG_MCP_Server
+from tabulate import tabulate
+
+app = UltraRAG_MCP_Server("sayhello")
+
+@app.tool(output="name->msg")
+def greet(name: str) -> Dict[str, str]:
+    ret = f"Hello, {name}!"
+    resp_tab = tabulate(
+        [
+            ["Server", __file__],
+            ["Input", name],
+            ["Output", ret],
+        ],
+        headers="firstrow",
+        tablefmt="fancy_grid",
+    )
+    app.logger.info("\n" + resp_tab)
+    return {"msg": ret}
+
+if __name__ == "__main__":
+    # Start the sayhello server using stdio transport
+    app.run(transport="stdio")
+```
+可以看到：
+
+- 工具 greet 接收一个 name 作为输入
+- 返回的 greeting 信息被命名为 msg
+- 使用装饰器 @app.tool(output="name->msg") 定义输入输出字段
+
+## Step 3：构建参数文件
+
+在运行代码前，很自然的一件事便是配置参数，UltraRAG提供了一个方便的参数配置方法，它会把你所有需要配置的参数整合到一个yaml文件里，运行下面命令即可实现：
+
+```shell
+ultrarag build examples/sayhello.yaml
+```
+
+终端输出：
+
+![](images/getting_started/sayhello_build.png)
+
+你将获得 examples/parameters/sayhello_parameter.yaml，内容如下：
+
+```yaml
+sayhello:
+  name: UltraRAG 2.0
+```
+
+在这里填写你希望传入 greet 的用户名称。
+
+## Step 4：运行 Pipeline
+
+一切准备就绪后，运行以下命令执行完整流程：
+
+```shell
+ultrarag run examples/sayhello.yaml
+```
+
+你将在终端和日志文件看到类似输出：
+
+![](images/getting_started/sayhello_run.png)
