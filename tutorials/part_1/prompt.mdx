@@ -4,7 +4,9 @@ title: "Prompt Server：构造LLM的Prompt输入"
 
 ## 什么是 Prompt Tool
 
-Prompt Tool 是 UltraRAG-MCP 中用于构建语言模型输入的组件。每个 Prompt Tool 由 @app.prompt 装饰定义，其主要职责是根据问题、检索段等输入，加载模板文件并生成标准化的 prompt message，可直接传递给 LLM 模型进行生成。
+Prompt Tool 是 UltraRAG-MCP 中用于构建语言模型输入的组件。
+
+每个 Prompt Tool 由 @app.prompt 装饰定义，其主要职责是根据问题、检索段等输入，加载模板文件并生成标准化的 prompt message，可直接传递给 LLM 模型进行生成。
 
 ## 如何实现一个 Prompt Tool？
 
@@ -12,7 +14,7 @@ Prompt Tool 是 UltraRAG-MCP 中用于构建语言模型输入的组件。每个
 
 ### 第一步：准备 Prompt 模板（Jinja2 格式）
 
-请将你的 prompt 模板保存为 .jinja 结尾的文件，例如：
+请将你的 prompt 模板保存为 `.jinja` 结尾的文件，例如：
 
 ```jinja
 Please answer the following question based on the given documents.
@@ -27,7 +29,7 @@ Question: {{question}}
 
 ### 第二步：在 Prompt Server 中实现 Tool
 
-调用我们提供的 load_prompt_template 方法加载模板，并在Prompt Server中实现一个工具函数（Tool）用于组装 prompt。
+调用我们提供的 `load_prompt_template` 方法加载模板，并在Prompt Server中实现一个工具函数（Tool）用于组装 prompt。
 
 ```python
 @app.prompt(output="q_ls,ret_psg,template->prompt_ls")
@@ -65,3 +67,5 @@ pipeline:
 prompt:
   template: prompt/qa_rag_boxed.jinja
 ```
+
+🚩 这样，你即可实现自定义 Prompt 构建与调用，极大提升 LLM 应用流程的可复用性与扩展性。
