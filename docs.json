@@ -78,21 +78,7 @@
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://ultrarag.mintlify.app/",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "GitHub",
-          "href": "https://github.com/ultrarag/UltraRAG-MCP",
-          "icon": "github"
-        }
-      ]
-    }
+    ]
   },
   "navbar": {
     "links": [
