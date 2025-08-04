@@ -46,7 +46,9 @@
           {
             "group": "📓 Part 3：数据构建与基线复现",
             "pages": [
-              "tutorials/part_3/index"
+              "tutorials/part_3/prepare_dataset",
+              "tutorials/part_3/emb_and_index",
+              "tutorials/part_3/reproduction"
             ]
           },
           {
