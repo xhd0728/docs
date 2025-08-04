@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "UltraRAG 2.0",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#722EA5",
+    "dark": "#9B5BB7",
+    "light": "#C8A6D6"
   },
   "favicon": "/favicon.svg",
   "navigation": {
