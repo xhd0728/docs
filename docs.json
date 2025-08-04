@@ -20,12 +20,7 @@
               "getting_started/installation",
               "getting_started/quick_start"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Tutorials",
-        "groups": [
+          },
           {
             "group": "📗 Part 1：构建属于你的 RAG 组件，Server 与 Tool 开发指南",
             "pages": [
