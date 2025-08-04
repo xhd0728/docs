@@ -54,7 +54,9 @@
           {
             "group": "📒 Part 4：开发进阶与部署指南（高级用法篇）",
             "pages": [
-              "tutorials/part_4/index"
+              "tutorials/part_4/debug",
+              "tutorials/part_4/deploy_retriever_serve",
+              "tutorials/part_4/multi_agent"
             ]
           },
           {
