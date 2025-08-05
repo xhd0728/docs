@@ -1,21 +1,21 @@
 ---
-title: "Server 别名复用机制"
+title: "Server Alias Reuse Mechanism"
 icon: "book-copy"
 ---
 
-## 为什么需要重命名
+## Why Alias and Rename
 
-在多智能体系统或多角色协作任务中，你可能希望多个模块复用相同的代码逻辑，但在推理流程中表现出不同的行为或配置。
+In multi-agent systems or multi-role collaboration tasks, you may want multiple modules to reuse the same code logic, but exhibit different behaviors or configurations in the reasoning workflow.
 
-例如，在同一个任务中使用两个不同的大模型分别扮演 **“回答者”** 和 **“复核者”** 两个角色。
+For example, you might use two different large models in the same task, acting as **"Responder"** and **"Reviewer"**.
 
-UltraRAG 提供了一种简单机制：为同一个 Server 模块配置多个逻辑别名，从而实现并行、解耦与个性化的执行流程。
+UltraRAG provides a simple mechanism: configure multiple logical aliases for the same Server module, enabling parallel, decoupled, and personalized execution flows.
 
-## 使用方法
+## How to Use
 
-### 1. 配置别名 Server
+### 1. Configure Alias Servers
 
-在 `pipeline.yaml` 中，你可以在 `servers` 字段下为同一个路径定义多个逻辑别名：
+In `pipeline.yaml`, you can define multiple logical aliases for the same path under the `servers` field:
 
 ```yaml
 servers:
@@ -23,11 +23,11 @@ servers:
   agent2: servers/generation
 ```
 
-这里 `agent1` 和 `agent2` 指向了相同的 `servers/generation` 模块，但后续将独立执行、独立配置。
+Here, both `agent1` and `agent2` point to the same `servers/generation` module, but will subsequently execute and be configured independently.
 
-### 2. 在pipeline中分别调用
+### 2. Call Each Alias Separately in the Pipeline
 
-在 pipeline 中，可以将这两个别名作为不同角色分别调用：
+In the pipeline, you can call these two aliases as different roles:
 
 ```yaml
 pipeline:
@@ -35,11 +35,11 @@ pipeline:
 - agent2.generate
 ```
 
-UltraRAG 会将这两次调用分别视为两个独立的 server 实例进行构建和执行。
+UltraRAG treats these calls as two independent server instances for construction and execution.
 
-## 示例
+## Example
 
-pipeline 文件示例（examples/multi_agent.yaml）
+Example pipeline file (`examples/multi_agent.yaml`):
 
 ```yaml
 # MCP Server
@@ -53,13 +53,13 @@ pipeline:
 - agent2.generate
 ```
 
-执行构建命令：
+Build with the following command:
 
 ```shell
 ultrarag build examples/multi_agent.yaml
 ```
 
-构建后生成的 server 配置如下所示：
+The generated server configuration is as follows:
 
 ```yaml
 agent1:
@@ -89,8 +89,8 @@ agent2:
         enable_thinking: false
 ```
 
-可以看到 `agent1` 和 `agent2` 分别拥有独立的模型、端口与采样参数配置。
+As you can see, `agent1` and `agent2` each have independent model, port, and sampling parameter configurations.
 
-## 总结
+## Summary
 
-通过为同一个 Server 模块设置多个别名，UltraRAG 支持高度灵活的多智能体任务编排和并发执行能力。你可以像搭积木一样，通过重命名构建复杂协作场景，而无需复制代码或模块逻辑。进一步，还可结合 branch 分支路由、loop 重复推理等机制打造完整 Agent 系统。
+By setting multiple aliases for the same Server module, UltraRAG supports highly flexible multi-agent workflow orchestration and concurrent execution. You can construct complex collaboration scenarios like building blocks through renaming, without copying code or module logic. Furthermore, you can combine it with branch routing, loop iterative reasoning, and other mechanisms to build a complete agent system.

@@ -1,13 +1,13 @@
 ---
-title: "使用 VSCode 调试"
+title: "Debugging with VSCode"
 icon: "bug"
 ---
 
-为了更高效地开发与调试 UltraRAG，你可以通过 VSCode 的调试功能运行指定的 Pipeline 配置，并进行断点调试。
+To develop and debug UltraRAG more efficiently, you can use VSCode's debugging features to run a specific Pipeline configuration and perform breakpoint debugging.
 
-## 步骤一：创建调试配置文件
+## Step 1: Create the Debug Configuration File
 
-在项目根目录下创建 .vscode/launch.json 文件，并写入以下内容：
+Create a `.vscode/launch.json` file in the project root directory and add the following content:
 
 ```json
 {
@@ -20,7 +20,7 @@ icon: "bug"
             "console": "integratedTerminal",
             "args": [
                 "run",
-                "${workspaceFolder}/examples/xxx.yaml" # 替换为你的 Pipeline 配置文件路径
+                "${workspaceFolder}/examples/xxx.yaml" # Replace with the path to your Pipeline configuration file
             ],
             "cwd": "${workspaceFolder}",
         }
@@ -28,10 +28,10 @@ icon: "bug"
 }
 ```
 
-## 步骤二：启动调试
+## Step 2: Start Debugging
 
-1. 打开 VSCode 左侧的调试面板（快捷键 Ctrl+Shift+D）。
-2. 在调试配置中选择 UltraRAG-MCP Debug。
-3. 点击绿色 ▶ 启动按钮，即可在 VSCode 内集成终端中运行并调试 UltraRAG。
+1. Open the Debug panel on the left side of VSCode (shortcut: Ctrl+Shift+D).
+2. Select "UltraRAG-MCP Debug" from the debug configurations.
+3. Click the green ▶ start button to run and debug UltraRAG directly in VSCode's integrated terminal.
 
-你可以在任意 Python 文件中设置断点，以逐步观察执行流程和变量状态。
+You can set breakpoints in any Python file to step through and observe the execution flow and variable states.
