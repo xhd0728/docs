@@ -18,7 +18,6 @@
             "groups": [
               {
                 "group": "开始使用",
-                "icon": "square-terminal",
                 "pages": [
                   "pages/cn/getting_started/introduction",
                   "pages/cn/getting_started/installation",
@@ -27,11 +26,10 @@
               },
               {
                 "group": "开发指南",
-                "icon": "square-terminal",
                 "pages": [
                   {
                     "group": "RAG 组件开发指南",
-                    "icon": "square-terminal",
+                    "icon": "compass",
                     "pages": [
                       "pages/cn/tutorials/part_1/server_index",
                       "pages/cn/tutorials/part_1/benchmark",
@@ -44,7 +42,7 @@
                   },
                   {
                     "group": "掌握 RAG 推理流程",
-                    "icon": "square-terminal",
+                    "icon": "share-nodes",
                     "pages": [
                       "pages/cn/tutorials/part_2/pipeline",
                       "pages/cn/tutorials/part_2/serial",
@@ -55,7 +53,7 @@
                   },
                   {
                     "group": "数据构建与基线复现",
-                    "icon": "square-terminal",
+                    "icon": "database",
                     "pages": [
                       "pages/cn/tutorials/part_3/prepare_dataset",
                       "pages/cn/tutorials/part_3/emb_and_index",
@@ -64,7 +62,7 @@
                   },
                   {
                     "group": "开发进阶与部署指南",
-                    "icon": "square-terminal",
+                    "icon": "code",
                     "pages": [
                       "pages/cn/tutorials/part_4/debug",
                       "pages/cn/tutorials/part_4/deploy_retriever_serve",
@@ -73,7 +71,7 @@
                   },
                   {
                     "group": "UltraRAG 开发实战",
-                    "icon": "square-terminal",
+                    "icon": "screwdriver-wrench",
                     "pages": [
                       "pages/cn/tutorials/part_5/series",
                       "pages/cn/tutorials/part_5/loop",
