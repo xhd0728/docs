@@ -1,15 +1,15 @@
 ---
-title: "数据流与参数绑定机制"
+title: "Data Flow and Parameter Binding Mechanism"
 icon: "arrows-split-up-and-left"
 ---
 
-在 UltraRAG 中，pipeline 是通过变量名进行数据绑定的：每个工具（Tool）在注册时会声明自己的输入参数名和输出变量名，而 pipeline 中的每一步执行，都是通过这些变量名完成传参和数据流动的。
+In UltraRAG, the pipeline achieves data binding via variable names: each tool is registered with its own input parameter names and output variable names, and every step in the pipeline passes data using these variable names.
 
-这一机制简单直接，但在多轮调用、复杂控制结构（如 loop 或 branch）中，会带来一些变量名冲突或重名绑定的问题。为解决此问题，UltraRAG 提供了 参数重写机制（参数重命名），使得你可以灵活控制数据在 pipeline 中的流动。
+This mechanism is simple and straightforward, but in multi-turn calls or complex control structures (such as loop or branch), it can result in variable name conflicts or duplicate bindings. To solve this, UltraRAG provides a **parameter rewriting mechanism** (parameter renaming), allowing you to flexibly control how data flows through the pipeline.
 
-## 数据如何流动？
+## How Does Data Flow?
 
-每个工具在 Server 中注册时，都指定了其输入和输出变量名。例如：
+When registering each tool in the Server, you specify its input and output variable names. For example:
 
 ```python
 mcp_inst.tool(
@@ -18,20 +18,20 @@ mcp_inst.tool(
 )
 ```
 
-含义是：
+This means:
 
-- 工具接收两个输入变量 q_ls 和 top_k
-- 工具输出变量名为 ret_psg
+- The tool receives two input variables: `q_ls` and `top_k`
+- The tool outputs a variable named `ret_psg`
 
-在最简单的串行 pipeline 中，这种默认绑定没有问题。但如果你在循环或分支中 多次调用 retriever_search，希望传入不同的数据（比如第一次叫 q_ls，第二次叫 sub_q_ls），那你就需要一个方法来 告诉 pipeline：这些变量其实是“同义词”。
+In the simplest serial pipeline, this default binding is fine. But if you want to call `retriever_search` multiple times in a loop or branch and wish to pass different data (for example, the first time as `q_ls`, the second time as `sub_q_ls`), you need a way to tell the pipeline: these variables are actually "synonyms".
 
-## 参数重命名机制
+## Parameter Renaming Mechanism
 
-为了解决上述变量名绑定冲突，UltraRAG 提供了如下机制：
+To resolve variable name binding conflicts as above, UltraRAG provides the following mechanism:
 
-UltraRAG 支持在 pipeline.yaml 中 使用 input: 和 output: 明确重命名传参与变量映射，而无需修改 server 中的代码。
+UltraRAG supports using `input:` and `output:` in `pipeline.yaml` to explicitly rename arguments and map variables, **without needing to modify any server code**.
 
-基本语法
+**Basic Syntax**
 
 ```yaml
 - module.tool:
@@ -39,12 +39,12 @@ UltraRAG 支持在 pipeline.yaml 中 使用 input: 和 output: 明确重命名�
       tool_param_name: actual_variable_name
     output:
       actual_variable_name
-- tool_param_name: 工具注册时写死的参数名
-- actual_variable_name: 当前 pipeline 中可用的变量名
-- output: 允许你将工具输出重命名为任意 pipeline 中新变量名
+- tool_param_name: The parameter name as defined in the tool's registration
+- actual_variable_name: The variable name available in the current pipeline context
+- output: Allows you to rename the tool's output as any new variable name in the pipeline
 ```
 
-## 示例1：输入变量重命名
+## Example 1: Rename Input Variable
 
 ```yaml
 - retriever.retriever_search:
@@ -52,18 +52,18 @@ UltraRAG 支持在 pipeline.yaml 中 使用 input: 和 output: 明确重命名�
       q_ls: sub_q_ls
 ```
 
-说明：retriever_search 原本期望名为 q_ls 的输入参数，现在你用的是变量 sub_q_ls，通过这条语句做了参数映射，无需修改 server 中的代码。
+Explanation: `retriever_search` originally expects an input parameter named `q_ls`, but here you are using the variable `sub_q_ls`. This statement maps the parameters, and you don't need to modify the server code.
 
-## 示例2：输出变量重命名
+## Example 2: Rename Output Variable
 
 ```yaml
 - retriever.retriever_search:
     output: round1_result
 ```
 
-说明：无论工具原本输出变量名叫什么（例如 ret_psg），现在都将其绑定为 round1_result，用于 pipeline 后续步骤引用。
+Explanation: Whatever the tool's original output variable name (for example, `ret_psg`), it will now be bound as `round1_result` for use in subsequent pipeline steps.
 
-例如：
+For example:
 
 ```yaml
 - prompt.qa_rag_boxed:
@@ -71,9 +71,9 @@ UltraRAG 支持在 pipeline.yaml 中 使用 input: 和 output: 明确重命名�
       ret_psg: round1_result
 ```
 
-`qa_rag_boxed` 工具注册时期望一个输入参数 ret_psg，此处我们用 input: 显式将上一阶段的 round1_result 映射为它的 ret_psg，实现数据绑定。
+The `qa_rag_boxed` tool expects an input parameter named `ret_psg`. Here, we explicitly map the previous stage's `round1_result` to its `ret_psg` using `input:`, achieving data binding.
 
-## 示例3：同时重写输入输出
+## Example 3: Rewrite Both Input and Output
 
 ```yaml
 - retriever.retriever_search:
@@ -82,6 +82,6 @@ UltraRAG 支持在 pipeline.yaml 中 使用 input: 和 output: 明确重命名�
     output: round1_result
 ```
 
-这个模式在 loop 中非常常见，每轮检索都用新的变量名。
+This pattern is common in loops, where each retrieval round uses new variable names.
 
-有了参数重写机制，你可以在不修改工具源码的前提下，灵活组合与复用任何 Server 提供的 Tool，让 UltraRAG 的 pipeline 更具扩展性与可控性。
+With the parameter rewriting mechanism, you can flexibly compose and reuse any Tool provided by a Server, making UltraRAG's pipeline much more extensible and controllable—all without modifying the underlying tool code.

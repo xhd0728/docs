@@ -1,21 +1,21 @@
 ---
-title: "分支型结构"
+title: "Branching Structure"
 icon: "code-branch"
 ---
 
-在复杂的推理任务中，我们常常需要根据模型当前的输出或中间状态决定流程是否继续。例如：
+In complex reasoning tasks, we often need to decide whether to continue the workflow based on the model's current output or intermediate state. For example:
 
-- 如果模型生成的是查询，就进行下一轮检索；
-- 如果模型已经生成了最终答案，就结束流程。
+- If the model generates a query, proceed to the next round of retrieval;
+- If the model has generated the final answer, end the workflow.
 
-为实现上述能力，UltraRAG 提供了 分支结构（branch），用于构建具备 条件跳转逻辑 的动态推理流程。
-> ✅ Router Server 是分支结构的搭档，它负责对当前状态进行判断并返回状态标签，驱动流程走向。
+To achieve this, UltraRAG provides the **branch** structure, which is used to build dynamic reasoning workflows with conditional jumping logic.
+> ✅ The Router Server is the partner of the branching structure. It is responsible for judging the current state and returning a status label, which drives the workflow direction.
 >
-> 若你尚未了解如何实现 Router Tool，请参考：Router Server 教程：用 Router Tool 控制分支流程逻辑
+> If you are not yet familiar with how to implement a Router Tool, please refer to: **Router Server Tutorial: Using Router Tool to Control Branch Logic**
 
-## 示例：动态判断是否进入下一轮检索
+## Example: Dynamically Decide Whether to Enter the Next Retrieval Round
 
-以下 pipeline 会在每轮生成后判断：当前生成内容是查询还是最终答案。若是查询，则进行下一轮检索与生成；否则流程结束。
+The following pipeline will, after each generation, determine whether the current generated content is a query or the final answer. If it's a query, it performs another round of retrieval and generation; otherwise, the workflow ends.
 
 ```yaml
 servers:
@@ -34,23 +34,23 @@ pipeline:
       steps:
       - branch:
           router:
-            - router.check_query_or_answer   # 输出 e.g. status=is_query/is_answer
+            - router.check_query_or_answer   # Output e.g. status=is_query/is_answer
           branches:
             is_query:
               - retriever.retriever_search
               - prompt.generate_query_or_answer
               - generation.generate
 
-            is_answer: []    # is_answer输出答案
+            is_answer: []    # is_answer outputs the answer
 
   - evaluation.evaluate
 ```
 
-## 说明
+## Explanation
 
-- branch:表示一个分支结构的开始。
-- router:指定用于判断分支逻辑的 Router Tool（通常返回一个状态标签如 is_query / is_answer）。
-- branches:定义每个状态下要执行的步骤序列，键是状态标签，值是对应的执行步骤列表（可为空表示终止）。
-- branches 中定义的键必须对应 Router tool返回的 state 值。
+- **branch**: Marks the start of a branching structure.
+- **router**: Specifies the Router Tool used to determine the branch logic (usually returns a status label such as `is_query` / `is_answer`).
+- **branches**: Defines the sequence of steps to execute for each state. The keys are status labels, and the values are the corresponding step lists (empty means terminate).
+- The keys defined in **branches** must match the `state` value returned by the Router tool.
 
-通过分支结构，UltraRAG 不仅支持多轮流程的灵活组合，还能实现动态判断与策略控制，使你能够构建真正「可控」、「具备推理能力」的 RAG 系统。
+With the branching structure, UltraRAG not only supports flexible composition of multi-turn workflows, but also enables dynamic judgment and strategy control, allowing you to build truly "controllable" and "reasoning-capable" RAG systems.

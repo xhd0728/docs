@@ -1,25 +1,25 @@
 ---
-title: "Pipeline 编排与结构"
+title: "Pipeline Orchestration and Structure"
 icon: "diagram-project"
 ---
 
-## 什么是 Pipeline？
+## What is a Pipeline?
 
-在 UltraRAG 中，Pipeline 是你定义“推理任务如何执行”的流程脚本。它像一个“任务计划表”或“工作流蓝图”，用来明确告诉系统每一步该做什么、怎么做、做完后怎么走下一步。
+In UltraRAG, a Pipeline is the script you define to describe “how an inference task should be executed.” It works like a “task schedule” or “workflow blueprint,” explicitly telling the system what to do in each step, how to do it, and what the next step should be after completion.
 
-你可以通过 Pipeline 组合不同模块（Server）中的功能（Tool），构建出一个完整、可复现、可控制的 RAG 推理流程。例如：
+You can use the Pipeline to combine functions (Tools) from different modules (Servers) to build a complete, reproducible, and controllable RAG inference workflow. For example:
 
-- 加载数据 → 检索文档 → 构造 prompt → 调用大模型 → 评估结果；
-- 或者在多轮生成中，根据模型中间的表现决定是否重新检索或停止生成。
+- Load data → Retrieve documents → Construct prompt → Call large model → Evaluate results;
+- Or in multi-turn generation, decide whether to re-retrieve or stop generation based on intermediate model outputs.
 
-Pipeline 的设计目标是：让复杂的 RAG 流程结构清晰、灵活、模块化，并通过 YAML 配置实现零代码编排。
+The design goal of the Pipeline is to make complex RAG workflow structures clear, flexible, and modular, and to enable zero-code orchestration through YAML configuration.
 
-## Pipeline 的构成核心
+## Core Components of a Pipeline
 
-在 UltraRAG 中，Pipeline 是以 YAML 文件形式编写的流程配置，它由两个顶层结构组成：
+In UltraRAG, a Pipeline is written as a YAML configuration file with two top-level structures:
 
-- servers：用于声明本流程中所使用的所有 MCP Server 模块。每个 Server 对应一个功能模块（如检索、生成等），键为模块名称，值为其在项目中的路径。
-- pipeline：定义任务执行流程，按步骤组织执行逻辑，支持串行（顺序执行）、循环（loop）与分支判断（branch）等控制结构。每一项表示一个执行步骤或流程控制节点。
+- servers: Used to declare all MCP Server modules involved in this workflow. Each Server corresponds to a functional module (such as retrieval, generation, etc.), with the key as the module name and the value as its path in the project.
+- pipeline: Defines the task execution flow, organizes execution logic step by step, and supports control structures such as serial (sequential execution), loop, and branch judgment. Each item represents an execution step or a control node.
 
 ```yaml
 # MCP Server
