@@ -19,9 +19,9 @@
               {
                 "group": "开始使用",
                 "pages": [
-                  "getting_started/introduction",
-                  "getting_started/installation",
-                  "getting_started/quick_start"
+                  "pages/cn/getting_started/introduction",
+                  "pages/cn/getting_started/installation",
+                  "pages/cn/getting_started/quick_start"
                 ]
               },
               {
@@ -30,45 +30,49 @@
                   {
                     "group": "📗 Part 1：构建属于你的 RAG 组件，Server 与 Tool 开发指南",
                     "pages": [
-                      "tutorials/part_1/server_index",
-                      "tutorials/part_1/benchmark",
-                      "tutorials/part_1/retriever",
-                      "tutorials/part_1/prompt",
-                      "tutorials/part_1/generation",
-                      "tutorials/part_1/evaluation",
-                      "tutorials/part_1/custom"
+                      "pages/cn/tutorials/part_1/server_index",
+                      "pages/cn/tutorials/part_1/benchmark",
+                      "pages/cn/tutorials/part_1/retriever",
+                      "pages/cn/tutorials/part_1/prompt",
+                      "pages/cn/tutorials/part_1/generation",
+                      "pages/cn/tutorials/part_1/evaluation",
+                      "pages/cn/tutorials/part_1/custom"
                     ]
                   },
                   {
                     "group": "📙 Part 2：从串行到分支，RAG 推理流程全掌握",
                     "pages": [
-                      "tutorials/part_2/pipeline",
-                      "tutorials/part_2/serial",
-                      "tutorials/part_2/loop",
-                      "tutorials/part_2/branch",
-                      "tutorials/part_2/data_and_params"
+                      "pages/cn/tutorials/part_2/pipeline",
+                      "pages/cn/tutorials/part_2/serial",
+                      "pages/cn/tutorials/part_2/loop",
+                      "pages/cn/tutorials/part_2/branch",
+                      "pages/cn/tutorials/part_2/data_and_params"
                     ]
                   },
                   {
                     "group": "📓 Part 3：数据构建与基线复现",
                     "pages": [
-                      "tutorials/part_3/prepare_dataset",
-                      "tutorials/part_3/emb_and_index",
-                      "tutorials/part_3/reproduction"
+                      "pages/cn/tutorials/part_3/prepare_dataset",
+                      "pages/cn/tutorials/part_3/emb_and_index",
+                      "pages/cn/tutorials/part_3/reproduction"
                     ]
                   },
                   {
                     "group": "📒 Part 4：开发进阶与部署指南（高级用法篇）",
                     "pages": [
-                      "tutorials/part_4/debug",
-                      "tutorials/part_4/deploy_retriever_serve",
-                      "tutorials/part_4/multi_agent"
+                      "pages/cn/tutorials/part_4/debug",
+                      "pages/cn/tutorials/part_4/deploy_retriever_serve",
+                      "pages/cn/tutorials/part_4/multi_agent"
                     ]
                   },
                   {
                     "group": "📘Part 5：UltraRAG开发实战",
                     "pages": [
-                      "tutorials/part_5/index"
+                      "pages/cn/tutorials/part_5/series",
+                      "pages/cn/tutorials/part_5/loop",
+                      "pages/cn/tutorials/part_5/branch",
+                      "pages/cn/tutorials/part_5/memory",
+                      "pages/cn/tutorials/part_5/deep_research"
                     ]
                   }
                 ]
