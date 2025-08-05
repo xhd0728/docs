@@ -1,9 +1,9 @@
 ---
-title: "基线复现"
+title: "Baseline Reproduction"
 icon: "rocket"
 ---
 
-UltraRAG 已集成多个经典与前沿的 RAG 基线方法，并提供统一的运行与评估接口，便于用户快速复现与对比。当前已支持的基线包括：
+UltraRAG has integrated multiple classic and cutting-edge RAG baseline methods and provides unified interfaces for running and evaluation, making it easy for users to quickly reproduce and compare. The currently supported baselines include:
 
 - Vanilla LLM
 - Vanilla RAG
@@ -16,24 +16,24 @@ UltraRAG 已集成多个经典与前沿的 RAG 基线方法，并提供统一的
 - Search-o1
 - Search-r1
 
-更多基线持续更新中。相关实验结果与复现设置将持续在 Leaderboard 页面中维护与更新。
+More baselines are continuously being added. Related experimental results and reproduction settings are continuously maintained and updated on the Leaderboard page.
 
-## 快速复现方式
+## Quick Reproduction
 
-用户可通过以下两步快速复现任意基线方法：
+Users can quickly reproduce any baseline method in two steps:
 
-### 1. 构建 Pipeline 配置
+### 1. Build the Pipeline Configuration
 
 ```shell
 ultrarag build examples/<baseline_name>.yaml
 ```
 
-### 2. 运行 Pipeline 进行推理与评估
+### 2. Run the Pipeline for Inference and Evaluation
 
 ```shell
 ultrarag run examples/<baseline_name>.yaml
 ```
 
-请将 `<baseline_name>` 替换为对应基线方法的 YAML 文件名（如 vanilla_rag.yaml、ircot.yaml 等）。
+Replace `<baseline_name>` with the YAML filename of the corresponding baseline method (e.g., vanilla_rag.yaml, ircot.yaml, etc.).
 
-📌 提示：如需查看所有可用基线的 YAML 文件，可参考项目中的 examples/ 目录。
+📌 Tip: To see all available YAML files for baselines, please refer to the examples/ directory in the project.
