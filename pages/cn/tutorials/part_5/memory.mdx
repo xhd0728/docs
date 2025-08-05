@@ -1,11 +1,11 @@
 ---
-title: "基于多轮中间结果的RAG Workflow 实战（IRCoT）"
+title: "基于多轮中间结果的 RAG Workflow"
 icon: "square-terminal"
 ---
 
 本节将实现一个更加复杂的多轮 RAG 推理流程 —— IRCoT（Iterative Retrieval with Chain-of-Thought）。
 
-> 原始论文详见：https://arxiv.org/pdf/2212.10509。
+> 原始论文详见：https://arxiv.org/pdf/2212.10509
 
 IRCoT 的核心思想是：在每一轮中，模型基于当前检索到的文档、历史推理链和问题生成新的推理内容（CoT），并据此触发下一轮检索。 这一交替式的循环可持续推进推理深度，直至满足终止条件（如明确回答已生成）。因此，它需要对多轮中间结果进行有效记录与访问 —— 这正是 UltraRAG 中 Memory 机制的用武之地。
 
@@ -76,7 +76,7 @@ def ircot_next_prompt(
     ret: List[PromptMessage] = []
     # ---------- 单轮 ----------
     if len(memory_q_ls) == 1:
-        for q, psg in zip(memory_q_ls[0], memory_ret_psg[0]):  # type: ignore[arg-type]
+        for q, psg in zip(memory_q_ls[0], memory_ret_psg[0]):
             if q is None:
                 continue
             passage_text = "" if psg is None else "\n".join(psg)

@@ -8,6 +8,7 @@ icon: "square-terminal"
 推荐使用 [uv](https://github.com/astral-sh/uv) 来安装并管理 UltraRAG 2.0，提供更快、更可靠的 Python 依赖管理体验。
 
 ```shell
+# clone项目
 git clone https://github.com/ultrarag/UltraRAG-MCP.git
 cd UltraRAG-MCP
 
@@ -19,62 +20,33 @@ conda activate ultramcp
 pip install uv
 uv pip install fastmcp==2.10
 
-# 安装项目依赖
+# 安装基本环境依赖（不包含torch，faiss，vllm等扩展组件）
 uv pip install -e .
+```
 
-# ====== （可选）Retriever Server 依赖说明 ======
-# 你可以根据自己的硬件环境选择安装 CPU 或 GPU 版本的 FAISS：
+UltraRAG 2.0 支持丰富的第三方扩展组件，可以按需安装：
 
-# 1. 安装 Retriever (CPU 版本)
-uv pip install -e ."[retriever-faiss-cpu]"
-
-# 2. 安装 Retriever (GPU 版本，仅支持 Linux + CUDA)
-uv pip install -e ."[retriever-faiss-gpu]"
-
-# 如果你希望手动管理 faiss，比如通过 conda 安装，也可以只装基础依赖：
-uv pip install -e ."[retriever-base]"
-# 然后手动安装 FAISS（任选其一）:
+```shell
+# ====== faiss 依赖说明 ======
+# 由于faiss-gpu需要手动编译，无法复用编译好的wheel
+# 根据自己的硬件环境，需要手动安装 CPU 或 GPU 版本的 FAISS：
 conda install -c pytorch faiss-cpu
 conda install -c pytorch faiss-gpu
 
-# ====== Corpus Server 依赖 ======
-uv pip install -e ."[corpus]"
+# 如需使用infinity_emb进行语料库编码和索引：
+uv pip install -e ."[infinity_emb]"
 
-# ====== vLLM 依赖 ======
+# 如需使用lancedb向量数据库：
+uv pip install -e ."[lancedb]"
+
+# 如需使用vLLM服务部署模型：
 uv pip install -e ."[vllm]"
 
-# ====== 安装所有依赖（默认CPU FAISS）======
+# 如需使用语料库文档解析功能：
+uv pip install -e ."[corpus]"
+
+# ====== 安装所有依赖（除faiss） ======
 uv pip install -e ."[all]"
-
-# ====== 安装所有依赖（GPU FAISS）======
-uv pip install -e ."[all]"
-uv pip install -e ."[retriever-faiss-gpu]"
-```
-
-同时，UltraRAG 也提供了 Docker 支持，便于快速部署与跨平台运行：
-
-```shell
-# 构建镜像
-docker build -t ultrarag-mcp:latest .
-
-# 启动container
-# CPU version
-docker run -it --rm \
-  -v $(pwd)/output:/app/output \
-  -v $(pwd)/logs:/app/logs \
-  ultrarag-mcp:latest
-# GPU version
-docker run -it --rm \
-  --gpus all \
-  -v $(pwd)/output:/app/output \
-  -v $(pwd)/logs:/app/logs \
-  ultrarag-mcp:latest
-  
-# 执行命令
-# 构建 pipeline
-ultrarag build examples/vanilla.yaml
-# 执行 pipeline
-ultrarag run examples/vanilla.yaml
 ```
 
 ## Verify Installation
