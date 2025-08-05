@@ -18,6 +18,7 @@
             "groups": [
               {
                 "group": "开始使用",
+                "icon": "square-terminal",
                 "pages": [
                   "pages/cn/getting_started/introduction",
                   "pages/cn/getting_started/installation",
@@ -26,9 +27,11 @@
               },
               {
                 "group": "开发指南",
+                "icon": "square-terminal",
                 "pages": [
                   {
-                    "group": "📗 Part 1：构建属于你的 RAG 组件，Server 与 Tool 开发指南",
+                    "group": "RAG 组件开发指南",
+                    "icon": "square-terminal",
                     "pages": [
                       "pages/cn/tutorials/part_1/server_index",
                       "pages/cn/tutorials/part_1/benchmark",
@@ -40,7 +43,8 @@
                     ]
                   },
                   {
-                    "group": "📙 Part 2：从串行到分支，RAG 推理流程全掌握",
+                    "group": "掌握 RAG 推理流程",
+                    "icon": "square-terminal",
                     "pages": [
                       "pages/cn/tutorials/part_2/pipeline",
                       "pages/cn/tutorials/part_2/serial",
@@ -50,7 +54,8 @@
                     ]
                   },
                   {
-                    "group": "📓 Part 3：数据构建与基线复现",
+                    "group": "数据构建与基线复现",
+                    "icon": "square-terminal",
                     "pages": [
                       "pages/cn/tutorials/part_3/prepare_dataset",
                       "pages/cn/tutorials/part_3/emb_and_index",
@@ -58,7 +63,8 @@
                     ]
                   },
                   {
-                    "group": "📒 Part 4：开发进阶与部署指南（高级用法篇）",
+                    "group": "开发进阶与部署指南",
+                    "icon": "square-terminal",
                     "pages": [
                       "pages/cn/tutorials/part_4/debug",
                       "pages/cn/tutorials/part_4/deploy_retriever_serve",
@@ -66,7 +72,8 @@
                     ]
                   },
                   {
-                    "group": "📘Part 5：UltraRAG开发实战",
+                    "group": "UltraRAG 开发实战",
+                    "icon": "square-terminal",
                     "pages": [
                       "pages/cn/tutorials/part_5/series",
                       "pages/cn/tutorials/part_5/loop",
@@ -75,17 +82,6 @@
                       "pages/cn/tutorials/part_5/deep_research"
                     ]
                   }
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "SDK Reference",
-            "groups": [
-              {
-                "group": "SDK Reference",
-                "pages": [
-                  "sdk/index"
                 ]
               }
             ]
