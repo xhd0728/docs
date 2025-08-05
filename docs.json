@@ -9,71 +9,81 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Getting Started",
-        "groups": [
+        "language": "cn",
+        "tabs": [
           {
-            "group": "Getting Started",
-            "pages": [
-              "getting_started/introduction",
-              "getting_started/installation",
-              "getting_started/quick_start"
+            "tab": "项目文档",
+            "groups": [
+              {
+                "group": "开始使用",
+                "pages": [
+                  "getting_started/introduction",
+                  "getting_started/installation",
+                  "getting_started/quick_start"
+                ]
+              },
+              {
+                "group": "开发指南",
+                "pages": [
+                  {
+                    "group": "📗 Part 1：构建属于你的 RAG 组件，Server 与 Tool 开发指南",
+                    "pages": [
+                      "tutorials/part_1/server_index",
+                      "tutorials/part_1/benchmark",
+                      "tutorials/part_1/retriever",
+                      "tutorials/part_1/prompt",
+                      "tutorials/part_1/generation",
+                      "tutorials/part_1/evaluation",
+                      "tutorials/part_1/custom"
+                    ]
+                  },
+                  {
+                    "group": "📙 Part 2：从串行到分支，RAG 推理流程全掌握",
+                    "pages": [
+                      "tutorials/part_2/pipeline",
+                      "tutorials/part_2/serial",
+                      "tutorials/part_2/loop",
+                      "tutorials/part_2/branch",
+                      "tutorials/part_2/data_and_params"
+                    ]
+                  },
+                  {
+                    "group": "📓 Part 3：数据构建与基线复现",
+                    "pages": [
+                      "tutorials/part_3/prepare_dataset",
+                      "tutorials/part_3/emb_and_index",
+                      "tutorials/part_3/reproduction"
+                    ]
+                  },
+                  {
+                    "group": "📒 Part 4：开发进阶与部署指南（高级用法篇）",
+                    "pages": [
+                      "tutorials/part_4/debug",
+                      "tutorials/part_4/deploy_retriever_serve",
+                      "tutorials/part_4/multi_agent"
+                    ]
+                  },
+                  {
+                    "group": "📘Part 5：UltraRAG开发实战",
+                    "pages": [
+                      "tutorials/part_5/index"
+                    ]
+                  }
+                ]
+              }
             ]
           },
           {
-            "group": "📗 Part 1：构建属于你的 RAG 组件，Server 与 Tool 开发指南",
-            "pages": [
-              "tutorials/part_1/server_index",
-              "tutorials/part_1/benchmark",
-              "tutorials/part_1/retriever",
-              "tutorials/part_1/prompt",
-              "tutorials/part_1/generation",
-              "tutorials/part_1/evaluation",
-              "tutorials/part_1/custom"
-            ]
-          },
-          {
-            "group": "📙 Part 2：从串行到分支，RAG 推理流程全掌握",
-            "pages": [
-              "tutorials/part_2/pipeline",
-              "tutorials/part_2/serial",
-              "tutorials/part_2/loop",
-              "tutorials/part_2/branch",
-              "tutorials/part_2/data_and_params"
-            ]
-          },
-          {
-            "group": "📓 Part 3：数据构建与基线复现",
-            "pages": [
-              "tutorials/part_3/prepare_dataset",
-              "tutorials/part_3/emb_and_index",
-              "tutorials/part_3/reproduction"
-            ]
-          },
-          {
-            "group": "📒 Part 4：开发进阶与部署指南（高级用法篇）",
-            "pages": [
-              "tutorials/part_4/debug",
-              "tutorials/part_4/deploy_retriever_serve",
-              "tutorials/part_4/multi_agent"
-            ]
-          },
-          {
-            "group": "📘Part 5：UltraRAG开发实战",
-            "pages": [
-              "tutorials/part_5/index"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "SDK Reference",
-        "groups": [
-          {
-            "group": "SDK Reference",
-            "pages": [
-              "sdk/index"
+            "tab": "SDK Reference",
+            "groups": [
+              {
+                "group": "SDK Reference",
+                "pages": [
+                  "sdk/index"
+                ]
+              }
             ]
           }
         ]
