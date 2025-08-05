@@ -1,29 +1,29 @@
 ---
-title: "串型 RAG Workflow"
+title: "Serial RAG Workflow"
 icon: "arrow-right-arrow-left"
 ---
 
-本节将手把手带你实现最基本的RAG 工作流：Vanilla RAG。你将学会如何使用 UltraRAG 构建一个从数据加载、检索、生成到评估完整流程的推理系统。
+This section will guide you step by step to implement the most basic RAG workflow: Vanilla RAG. You will learn how to use UltraRAG to build a reasoning system covering the complete process from data loading, retrieval, generation to evaluation.
 
-## Step 1：明确工作流结构
+## Step 1: Define the Workflow Structure
 
-Vanilla RAG 的最基本流程如下：
+The basic process of Vanilla RAG is as follows:
 
-> 数据加载 → 文档检索 → 模型生成 → 答案评估
+> Data loading → Document retrieval → Model generation → Answer evaluation
 
-为确保检索环节正常运行，请你优先完成语料库的编码与索引构建。相关内容可参考教程：[使用 UltraRAG 对大规模语料库进行编码与索引]
+To ensure the retrieval step works properly, please first complete corpus embedding and index building. See the tutorial: [Encoding and Indexing Large-scale Corpora with UltraRAG] for details.
 
-## Step 2：实现必要Tool
+## Step 2: Implement Necessary Tools
 
-在该流程中，我们希望模型的最终答案以 \boxed{} 包裹，以便后续自动提取。因此，我们需要：
+In this process, we want the model's final answer to be wrapped in \boxed{}, so that it can be automatically extracted later. Therefore, we need:
 
-- 自定义一个 Prompt Tool：将问题与检索内容构造成标准化的生成输入；
-- 自定义一个 Tool：提取 \boxed{} 中的答案文本；
-- 其余模块（检索、生成、评估）均可复用 UltraRAG 的现有组件。
+- A custom Prompt Tool: to construct standardized generation inputs from the question and retrieved contents;
+- A custom Tool: to extract the answer text wrapped in \boxed{};
+- All other modules (retrieval, generation, evaluation) can directly reuse UltraRAG’s existing components.
 
-### Step 2.1: 实现prompt.qa_rag_boxed
+### Step 2.1: Implement prompt.qa_rag_boxed
 
-首先准备 Prompt 模板文件 prompt/qa_boxed.jinja：
+First, prepare the prompt template file prompt/qa_boxed.jinja:
 
 ```jinja
 Please answer the following question.
@@ -33,7 +33,7 @@ Provide your final answer in the format \boxed{YOUR_ANSWER}.
 Question: {{question}}
 ```
 
-然后，在 Prompt Server 中实现如下 Tool：
+Then, implement the following Tool in the Prompt Server:
 
 ```python
 # prompt for QA RAG boxed
@@ -50,9 +50,9 @@ def qa_rag_boxed(
     return ret
 ```
 
-### Step 2.2: 实现custom.output_extract_from_boxed
+### Step 2.2: Implement custom.output_extract_from_boxed
 
-为了从模型输出中提取 \boxed{} 包裹的答案，可以在 Custom Server 中实现如下 Tool：
+To extract the answer wrapped in \boxed{} from the model output, implement the following Tool in the Custom Server:
 
 ```python
 @app.tool(output="ans_ls->pred_ls")
@@ -77,7 +77,7 @@ def output_extract_from_boxed(ans_ls: List[str]) -> Dict[str, List[str]]:
             if content.startswith(r"\text{") and content.endswith("}"):
                 content = content[len(r"\text{") : -1].strip()
             content = content.strip("()").strip()
-        # 还原 \\
+        # Restore \\
         content = content.replace("\\", " ")
         content = content.replace("  ", " ")
         return content
@@ -85,9 +85,9 @@ def output_extract_from_boxed(ans_ls: List[str]) -> Dict[str, List[str]]:
     return {"pred_ls": [extract(ans) for ans in ans_ls]}
 ```
 
-## Step 3：编写 Pipeline 配置文件
+## Step 3: Write the Pipeline Configuration File
 
-完成上述代码开发后，在 examples/ 目录下创建一个新的配置文件：vanilla_rag.yaml。
+After completing the above code development, create a new configuration file in the examples/ directory: vanilla_rag.yaml.
 
 ```yaml
 # Vanilla RAG
@@ -104,7 +104,7 @@ servers:
 # MCP Client Pipeline
 pipeline:
 - benchmark.get_data
-# 如果没有部署好的 retriever，可替换为以下两步：
+# If retriever is not deployed, replace with the following two steps:
 # - retriever.retriever_init      
 # - retriever.retriever_search
 - retriever.retriever_deploy_search
@@ -114,15 +114,15 @@ pipeline:
 - evaluation.evaluate
 ```
 
-## Step 4：配置 Pipeline参数
+## Step 4: Configure Pipeline Parameters
 
-执行下列命令：
+Run the following command:
 
 ```shell
 ultrarag build examples/vanilla_rag.yaml
 ```
 
-打开生成的 examples/parameter/vanilla_rag_parameter.yaml，修改如下配置：
+Open the generated examples/parameter/vanilla_rag_parameter.yaml and modify the configuration as follows:
 
 ```yaml
 benchmark:
@@ -165,33 +165,33 @@ retriever:
   top_k: 5
 ```
 
-## Step 5：运行你的推理流程！
+## Step 5: Run Your Reasoning Workflow!
 
-一切准备就绪后，执行以下命令启动推理流程：
+Once everything is ready, run the following command to start the reasoning workflow:
 
 ```shell
 ultrarag run examples/vanilla_rag.yaml
 ```
 
-### 评估结果
+### Evaluation Results
 
-模型预测结果将自动评估，并保存至 evaluation server 中配置的 save_path 路径。例如：
+The model prediction results will be automatically evaluated and saved to the path configured in the evaluation server’s save_path. For example:
 
 ```shell
 output/asqa.json
 ```
 
-### 运行日志
+### Running Logs
 
-推理过程中的详细日志会保存在 logs/ 目录下，文件名基于运行时间生成，便于检索和复现。例如：
+Detailed logs of the reasoning process are saved in the logs/ directory. File names are generated based on runtime for easy tracking and reproducibility. For example:
 
 ```shell
 logs/20250804_193900.log
 ```
 
-### 中间结果文件
+### Intermediate Result Files
 
-所有流程执行过程中的中间结果（包括每一步输入输出）将记录为 memory 文件，默认保存在 output/ 目录，例如：
+All intermediate results during workflow execution (including the input and output of each step) are recorded as memory files, by default saved in the output/ directory. For example:
 
 ```shell
 output/memory_asqa_vanilla_rag_20250804_193900.json

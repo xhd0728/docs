@@ -1,33 +1,33 @@
 ---
-title: "循环型 RAG Workflow"
+title: "Cyclic RAG Workflow"
 icon: "rotate-right"
 ---
 
-本节将带你实现一种典型的迭代推理能力的 RAG 工作流，IterRetGen。该流程支持基于模型输出反复更新查询，从而逐步收敛至更优的答案。
+This section will guide you to implement a typical iterative reasoning RAG workflow: IterRetGen. This workflow supports repeatedly updating queries based on model outputs to gradually converge to a better answer.
 
-> 原始论文详见：https://arxiv.org/pdf/2305.15294
+> For the original paper, see: https://arxiv.org/pdf/2305.15294
 
-## Step 1: 明确工作流结构
+## Step 1: Clarify the Workflow Structure
 
-我们先来回顾论文提出的 IterRetGen 原始流程结构图：
+Let’s review the original IterRetGen workflow structure diagram from the paper:
 
 ![](/images/part_5/iterretgen.png)
 
-在 UltraRAG 中，你可以基于已有模块快速实现该工作流，其整体架构可抽象为下图：
+In UltraRAG, you can quickly implement this workflow based on existing modules, and its overall architecture can be abstracted as follows:
 
 ![](/images/part_5/iterretgen_pipe.png)
 
-如图所示：
+As shown:
 
-- 模型每轮生成的答案会与原始问题拼接，作为下一轮检索的查询。
-- 该过程按照设定的最大循环次数执行 N 次
-- 除了 prompt 和 custom 两个模块需自定义实现，其他功能均可直接复用 UltraRAG 内置工具。
+- The model’s answer generated in each round is concatenated with the original question to form the next round’s retrieval query.
+- This process is executed N times according to the set maximum loop count.
+- Except for the prompt and custom modules, which need custom implementation, all other functions can be directly reused from UltraRAG’s built-in tools.
 
-## Step 2: 实现必要Tool
+## Step 2: Implement the Required Tool
 
-### Step 2.1 :实现custom.iterretgen_nextquery 
+### Step 2.1: Implement custom.iterretgen_nextquery
 
-IterRetGen通过拼接查询query和当前轮次生成的答案作为本轮查询，为此在 servers/custom/src/custom.py 中添加如下代码：
+IterRetGen constructs each round’s query by concatenating the query and the current round’s answer. Add the following code to `servers/custom/src/custom.py`:
 
 ```python
 @app.tool(output="q_ls,ret_psg->nextq_ls")
@@ -42,9 +42,9 @@ def iterretgen_nextquery(
     return {"nextq_ls": ret}
 ```
 
-## Step 3: 编写 Pipeline 配置文件
+## Step 3: Write the Pipeline Configuration File
 
-在 examples/ 目录下新建一个 YAML 文件，如 IterRetGen.yaml：
+Create a new YAML file in the `examples/` directory, such as `IterRetGen.yaml`:
 
 ```yaml
 # IterRetGen demo
@@ -80,15 +80,15 @@ pipeline:
 - evaluation.evaluate
 ```
 
-## Step 4：配置 Pipeline参数
+## Step 4: Configure Pipeline Parameters
 
-执行下列命令：
+Run the following command:
 
 ```shell
 ultrarag build examples/IterRetGen.yaml
 ```
 
-打开生成的 examples/parameter/IterRetGen_parameter.yaml，修改如下配置：
+Open the generated `examples/parameter/IterRetGen_parameter.yaml` and modify the configuration as follows:
 
 ```yaml
 benchmark:
@@ -131,9 +131,9 @@ retriever:
   top_k: 5
 ```
 
-## Step 5：运行你的推理流程！
+## Step 5: Run Your Reasoning Workflow!
 
-一切准备就绪后，执行以下命令启动推理流程：
+Once everything is ready, run the following command to start the reasoning workflow:
 
 ```shell
 ultrarag run examples/IterRetGen.yaml
