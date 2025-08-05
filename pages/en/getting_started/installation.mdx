@@ -1,0 +1,62 @@
+---
+title: "Installation"
+icon: "download"
+---
+
+## Install UltraRAG 2.0
+
+It is recommended to use [uv](https://github.com/astral-sh/uv) to install and manage UltraRAG 2.0, providing a faster and more reliable Python dependency management experience.
+
+```shell
+# Clone the project
+git clone https://github.com/ultrarag/UltraRAG-MCP.git
+cd UltraRAG-MCP
+
+# Create a conda environment
+conda create -n ultramcp python=3.11
+conda activate ultramcp
+
+# Install fastmcp
+pip install uv
+uv pip install fastmcp==2.10
+
+# Install base dependencies (excluding torch, faiss, vllm and other optional components)
+uv pip install -e .
+```
+
+UltraRAG 2.0 supports a variety of third-party extensions, which can be installed as needed:
+
+```shell
+# ====== faiss dependency notes ======
+# faiss-gpu needs to be compiled manually, and pre-built wheels cannot be reused
+# Please install the CPU or GPU version of FAISS based on your hardware environment:
+conda install -c pytorch faiss-cpu
+conda install -c pytorch faiss-gpu
+
+# To use infinity_emb for corpus encoding and indexing:
+uv pip install -e ."[infinity_emb]"
+
+# To use lancedb as a vector database:
+uv pip install -e ."[lancedb]"
+
+# To deploy models with vLLM service:
+uv pip install -e ."[vllm]"
+
+# To enable corpus document parsing:
+uv pip install -e ."[corpus]"
+
+# ====== Install all dependencies (except faiss) ======
+uv pip install -e ."[all]"
+```
+
+## Verify Installation
+
+To verify that UltraRAG has been successfully installed, you can run the following command:
+
+```shell
+ultrarag run examples/sayhello.yaml 
+```
+
+If everything is working correctly, you will see the following output:
+
+![](/images/getting_started/sayhello_run.png)

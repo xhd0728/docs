@@ -1,0 +1,72 @@
+---
+title: "Retriever Server"
+icon: "magnifying-glass"
+---
+
+> Currently, there is a strange bug requiring `sentence-transformer` version `4.1.0`
+> \
+> We will gradually decouple third-party libraries in future minor updates.
+
+## Server Function
+
+The Retriever Server is the vector retrieval module in UltraRAG. It integrates multiple features including text embedding, index construction, retrieval, online model launching, and model deployment.
+
+It supports end-to-end knowledge retrieval workflows and is suitable for rapid vectorization and efficient recall on large-scale corpora.
+
+## Parameter Description
+
+```yaml
+# servers/retriever/parameter.yaml
+retriever_path: openbmb/MiniCPM-Embedding-Light
+corpus_path: data/sample_hotpotqa_corpus_5.jsonl
+embedding_path: embedding/embedding.npy
+index_path: index/index.index
+
+# infinity_emb config
+infinity_kwargs:
+  bettertransformer: false
+  pooling_method: auto
+  device: cuda
+  batch_size: 1024
+
+cuda_devices: "0,1"
+query_instruction: "Query: "
+faiss_use_gpu: True
+top_k: 5
+overwrite: false
+retriever_url: http://localhost:8080
+index_chunk_size: 50000
+
+# OpenAI API configuration
+use_openai: false
+openai_model: "text-embedding-3-small"
+api_base: ""
+api_key: ""
+
+# LanceDB configuration
+lancedb_path: "lancedb/"
+table_name: "vector_index"
+filter_expr: null
+```
+
+- `retriever_path`: Name or local path of the retrieval model.
+- `corpus_path`: Path to the corpus file, in `.jsonl` format, where each line should contain a `contents` field representing a document or passage.
+- `embedding_path`: Path to store embedding vectors (`.npy`), for index construction or loading. If not available, you can generate it using the `retriever_embed` tool and save to this path.
+- `index_path`: Path to save the index file (`.index`), for loading existing indexes or saving new ones.
+- `infinity_kwargs`: Parameters related to the infinity library. Set `pooling_method` (supports `cls`, `mean`, `auto`), `batch_size`, etc.
+- `cuda_devices`: Specify the GPU devices to use.
+- `query_instruction`: Prompt prefix to be appended before the query.
+- `faiss_use_gpu`: Whether to enable GPU-accelerated FAISS index. If set to `False`, FAISS will run on CPU.
+- `top_k`: Number of documents returned for each query.
+- `overwrite`: Whether to allow overwriting existing embedding/index files. Set to `False` to prevent overwriting generated files.
+- `retriever_url`: Address and port for deploying the retriever service.
+- `index_chunk_size`: Index chunk size, prevents OOM caused by loading all data into CPU at once.
+
+## Tool Function Description
+
+- `retriever_init`: Initializes and loads the retriever model, loads corpus data, and (optionally) loads existing indexes.
+- `retriever_embed`: Encodes the previously loaded corpus content into vector embeddings and saves the result as a `.npy` file for subsequent FAISS index construction.
+- `retriever_index`: Builds a FAISS index based on the pre-generated embedding file (`.npy` format) and saves it as an `.index` file for vector retrieval.
+- `retriever_search`: Receives a batch of queries, encodes them into vectors, retrieves through the FAISS index, and returns the top-k similar text contents for each query.
+- `retriever_deploy_service`: Launches a Flask-based vector retrieval server, deploying a `/search` endpoint that supports semantic retrieval via HTTP POST requests.
+- `retriever_deploy_search`: Acts as a client to access the remote Flask retrieval service, sends the query list to the specified service address, calls the `/search` endpoint via HTTP POST, and returns the retrieval results.

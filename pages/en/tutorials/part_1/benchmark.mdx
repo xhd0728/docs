@@ -1,0 +1,36 @@
+---
+title: "Benchmark Server"
+icon: "chart-line"
+---
+
+## `Server` Function
+
+The `Benchmark Server` is used to load datasets for evaluation, commonly used for benchmarking, question answering tasks, or as the data input stage in generation tasks.
+
+We highly recommend preprocessing your data into `.jsonl` format.
+
+### Parameter Description
+
+Below is the configuration file for `servers/benchmark/parameter.yaml`:
+
+```yaml
+# servers/benchmark/parameter.yaml
+benchmark:
+  name: asqa
+  path: data/sample_asqa_5.jsonl
+  key_map:
+    q_ls: question
+    gt_ls: golden_answers
+  limit: 2
+```
+
+- `name`: The name of the dataset, used for logging, debugging, or identifying the currently loaded dataset in the system.
+- `path`: Path to the data file, serving as the input for the `get_data` tool.
+- `key_map`: Field mapping table, specifying which fields to extract from each sample and their aliases.
+  - For example: `q_ls: question` maps the original field `question` to `q_ls`.
+  - To add additional fields, simply extend this section, e.g., `p_ls: retrieved_passage`.
+- `limit`: Number of samples to load; `-1` means loading all data.
+
+## Tool Function Description
+
+- `get_data`: This tool function is used to load and parse data during the preprocessing stage, extracting key fields (such as questions, answers, retrieved passages, etc.) for downstream modules to use.

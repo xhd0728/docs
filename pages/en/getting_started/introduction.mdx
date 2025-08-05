@@ -1,0 +1,24 @@
+---
+title: "Introduction"
+icon: "hand-wave"
+---
+
+## UltraRAG 2.0
+
+UltraRAG 2.0 is the first lightweight RAG system framework designed based on the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/overview) architecture, aiming to provide efficient modeling support for both scientific research and real-world applications. It standardizes the core components of RAG (such as Retriever, Generator, etc.) into independent MCP Servers and enables flexible invocation and functional extension via function-level tool interfaces. With the MCP Client acting as the workflow orchestrator, developers only need to write concise YAML files to efficiently build inference pipelines supporting complex control structures such as sequential, loop, and conditional branching, significantly lowering the development barrier and cost for constructing and debugging complex RAG systems.
+
+The overall architecture of UltraRAG consists of four core components. The Pipeline is a YAML-based workflow definition file used to describe the invocation order and execution logic of each component and tool. The Client acts as the central control module, responsible for scheduling various Servers, organizing workflow execution, and managing intermediate data flow. Data provides unified data loading interfaces and a memory mechanism for intermediate state storage, ensuring information is persistently utilized throughout multi-turn inference. Servers contain all independently callable functional modules, including generation, retriever, benchmark (dataset loading), evaluation, prompt (custom templates), and custom (user-defined logic), allowing developers to freely register or replace any module via standard interfaces for flexible composition and rapid iteration. Moreover, UltraRAG supports integration with external MCP Servers, further extending the system’s capability boundaries.
+
+![](/images/getting_started/intro.png)
+
+UltraRAG 2.0 also includes a built-in ToolCall feature, enabling developers to directly invoke UltraRAG-provided utility functions for seamless integration and flexible extension without modifying the original codebase. The framework provides comprehensive tutorials from beginner to advanced levels, includes 17 mainstream benchmark tasks and various high-quality baselines, and features a unified evaluation system and knowledge base support, greatly enhancing system development efficiency and experimental reproducibility.
+
+## Why UltraRAG 2.0?
+
+Current RAG systems are evolving from simple early-stage module chaining into complex workflows that rely on model-driven reasoning, dynamic retrieval, and conditional judgment. These systems typically involve multi-turn interaction and information updating, and traditional frameworks struggle to meet requirements for flexibility and scalability. Existing open-source implementations often lack a unified paradigm, suffer from severe coupling between baseline modules, and have loose structures, making understanding, reproduction, and comparative research extremely challenging.
+
+To address these challenges, UltraRAG 2.0 is committed to providing:
+
+- 🚀 **Low-Code Construction of Complex Pipelines**: Natively supports serial, loop, and conditional control structures for inference. Developers can implement complex iterative RAG workflows (such as Search-O1) by simply writing YAML files and a small amount of custom code.
+- ⚡ **Rapid Reproduction and Functional Extension**: Based on the MCP architecture, all modules are encapsulated as independent, reusable Servers. Users can customize their own Servers or reuse existing modules as needed. Each Server’s functionality is registered as a function-level tool, and new features can be integrated into the full pipeline by simply adding a function. In addition, UltraRAG supports invoking external MCP Servers to easily expand pipeline capabilities and application scenarios.
+- 📊 **Unified Evaluation and Comparison**: Features built-in standardized evaluation workflows and metric management, supporting out-of-the-box and extensible evaluation for 17 major research benchmarks, continuously integrating the latest baselines and leaderboard results to facilitate systematic research and optimization.

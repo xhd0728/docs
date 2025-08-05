@@ -85,6 +85,82 @@
             ]
           }
         ]
+      },
+      {
+        "language": "en",
+        "tabs": [
+          {
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "pages/en/getting_started/introduction",
+                  "pages/en/getting_started/installation",
+                  "pages/en/getting_started/quick_start"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  {
+                    "group": "RAG Component Development Guide",
+                    "icon": "compass",
+                    "pages": [
+                      "pages/en/tutorials/part_1/server_index",
+                      "pages/en/tutorials/part_1/benchmark",
+                      "pages/en/tutorials/part_1/retriever",
+                      "pages/en/tutorials/part_1/prompt",
+                      "pages/en/tutorials/part_1/generation",
+                      "pages/en/tutorials/part_1/evaluation",
+                      "pages/en/tutorials/part_1/custom"
+                    ]
+                  },
+                  {
+                    "group": "Master RAG Inference Process",
+                    "icon": "share-nodes",
+                    "pages": [
+                      "pages/en/tutorials/part_2/pipeline",
+                      "pages/en/tutorials/part_2/serial",
+                      "pages/en/tutorials/part_2/loop",
+                      "pages/en/tutorials/part_2/branch",
+                      "pages/en/tutorials/part_2/data_and_params"
+                    ]
+                  },
+                  {
+                    "group": "Data Construction and Baseline Reproduction",
+                    "icon": "database",
+                    "pages": [
+                      "pages/en/tutorials/part_3/prepare_dataset",
+                      "pages/en/tutorials/part_3/emb_and_index",
+                      "pages/en/tutorials/part_3/reproduction"
+                    ]
+                  },
+                  {
+                    "group": "Development Advanced and Deployment Guide",
+                    "icon": "code",
+                    "pages": [
+                      "pages/en/tutorials/part_4/debug",
+                      "pages/en/tutorials/part_4/deploy_retriever_serve",
+                      "pages/en/tutorials/part_4/multi_agent"
+                    ]
+                  },
+                  {
+                    "group": "UltraRAG Development Practice",
+                    "icon": "screwdriver-wrench",
+                    "pages": [
+                      "pages/en/tutorials/part_5/series",
+                      "pages/en/tutorials/part_5/loop",
+                      "pages/en/tutorials/part_5/branch",
+                      "pages/en/tutorials/part_5/memory",
+                      "pages/en/tutorials/part_5/deep_research"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },

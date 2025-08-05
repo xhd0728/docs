@@ -1,0 +1,45 @@
+---
+title: "Generation Server"
+icon: "pen-nib"
+---
+
+## Server Function
+
+The Generation Server is used to deploy large language models (LLMs) and generate responses by receiving input from the Prompt Server. It currently uses [vLLM](https://github.com/vllm-project/vllm) as the model deployment backend.
+
+## Parameter Description
+
+```yaml
+# servers/generation/parameter.yaml
+model_name: openbmb/MiniCPM4-8B # model name or path
+base_url: http://localhost:8000/v1 # vllm server url
+
+# init vllm server configs
+port: 8000
+gpu_ids: "0,1"
+api_key: ""
+
+# generation parameters
+sampling_params:
+  temperature: 0.7
+  top_p: 0.8
+  max_tokens: 2048
+  extra_body:
+    top_k: 20
+    chat_template_kwargs:
+      enable_thinking: false # as qwen3, switch to true if you want to enable thinking
+    include_stop_str_in_output: true # use in search-o1 pipeline
+  # stop: [ "<|im_end|>", "<|end_search_query|>" ] # use in search-o1 pipeline
+```
+
+- `model_name`: Name or path of the generation model used
+- `base_url`: HTTP endpoint address of the vLLM model service
+- `port`: Port that the local vLLM service listens to
+- `gpu_ids`: Specify GPU devices
+- `api_key`: API key required to call the model service
+- `sampling_params`: Generation parameters supported by vLLM, such as temperature, top-p, max generation length, etc.
+
+## Tool Description
+
+- `initialize_local_vllm`: Starts a local vLLM model service and waits until it is ready, returning the service's base_url.
+- `generate`: Receives prompt input from the prompt server, calls an LLM interface supporting the OpenAI API protocol for generation, and returns a list of response strings.
