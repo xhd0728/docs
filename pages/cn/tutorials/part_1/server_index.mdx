@@ -21,8 +21,7 @@ icon: "books"
 
 我们首先通过 UltraRAG_MCP_Server 实例化一个名为 `calculator` 的 Server：
 
-```python
-# servers/calculator/src/calculator.py
+```python servers/calculator/src/calculator.py icon="python"
 from ultrarag_mcp.server import UltraRAG_MCP_Server
 
 app = UltraRAG_MCP_Server("calculator")
@@ -35,8 +34,7 @@ if __name__ == "__main__":
 
 使用 `@app.tool` 装饰器注册工具函数，这些函数将在 pipeline 中被调用:
 
-```python
-# servers/calculator/src/calculator.py
+```python servers/calculator/src/calculator.py icon="python"
 from ultrarag_mcp.server import UltraRAG_MCP_Server
 
 app = UltraRAG_MCP_Server("calculator")
@@ -64,8 +62,7 @@ if __name__ == "__main__":
 
 创建参数配置文件 `servers/calculator/parameter.yaml`，请将你实现的工具需要用到的参数写入该 server 路径下的 parameter 文件，用于标明参数并注入默认值：
 
-```yaml
-# servers/calculator/parameter.yaml
+```yaml servers/calculator/parameter.yaml
 a: 1
 b: 2
 ```
@@ -82,8 +79,7 @@ UR-2.0 在 build 阶段会自动读取每个 Server 目录下的 parameter.yaml 
 
 在某些场景我们可能希望在 Server 内部维护一些共享的状态或变量，比如初始化模型，可以将 Server 封装为一个类。以下是将 Calculator Server 封装为类的示例：
 
-```yaml
-# servers/calculator/src/calculator.py
+```python servers/calculator/src/calculator.py icon="python"
 from ultrarag_mcp.server import UltraRAG_MCP_Server
 
 app = UltraRAG_MCP_Server("calculator")

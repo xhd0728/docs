@@ -15,7 +15,7 @@ Prompt Tool 是 UR-2.0 中用于构建语言模型输入的组件。每个 Promp
 
 请将你的 prompt 模板保存为 .jinja 结尾的文件，例如：
 
-```jinja
+```jinja prompt/qa_rag_boxed.jinja
 Please answer the following question based on the given documents.
 Think step by step.
 Provide your final answer in the format \boxed{YOUR_ANSWER}.
@@ -30,7 +30,7 @@ Question: {{question}}
 
 调用我们提供的 `load_prompt_template` 方法加载模板，并在 Prompt Server 中实现一个工具函数（Tool）用于组装 prompt：
 
-```python
+```python servers/prompt/src/prompt.py icon="python"
 @app.prompt(output="q_ls,ret_psg,template->prompt_ls")
 def qa_rag_boxed(
     q_ls: List[str], ret_psg: List[str | Any], template: str | Path
@@ -48,7 +48,7 @@ def qa_rag_boxed(
 
 1. 在 YAML 配置文件中注册 Prompt Server 并调用你实现的 Tool：
 
-```yaml
+```yaml servers/prompt/parameter.yaml
 # MCP Server
 servers:
   generation: servers/generation
@@ -58,16 +58,18 @@ servers:
 pipeline:
 - prompt.qa_rag_boxed
 - generation.generate
+```
+
 2. 构建后，修改运行时参数，指定你的模板文件路径：
 
-```yaml
+```yaml servers/prompt/parameter.yaml
 prompt:
   template: prompt/qa_rag_boxed.jinja
 ```
 
 ## 为多个工具绑定不同模板
 
-```python
+```python servers/prompt/src/prompt.py icon="python"
 @app.prompt(output="q_ls,ret_psg,template1->prompt_ls")
 def qa_rag_boxed(
     q_ls: List[str], ret_psg: List[str | Any], template: str | Path
@@ -82,7 +84,7 @@ def qa_rag_boxed_2(
 ```
 为上述两个工具分别绑定模板路径，在 `servers/prompt/parameter.yaml` 中添加：
 
-```yaml
+```yaml servers/prompt/parameter.yaml
 template1: prompt/qa_boxed.jinja
 template2: prompt/qa_boxed.jinja
 ```

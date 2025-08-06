@@ -11,7 +11,7 @@ Custom Server 是一个专门用于存放无法归类到标准模块（如 Retri
 
 以下是 Search-o1 pipeline 中使用的一个自定义 Tool，用于从模型生成的回答中提取 `<|begin_search_query|>` 到 `<|end_search_query|>` 之间的搜索查询字符串：
 
-```python
+```python servers/custom/src/custom.py icon="python"
 @app.tool(output="ans_ls->extract_query_list")
 def search_o1_query_extract(ans_ls: List[str]) -> Dict[str, List[str]]:
 
@@ -39,7 +39,7 @@ def search_o1_query_extract(ans_ls: List[str]) -> Dict[str, List[str]]:
 
 这个 Tool 的典型应用是在 generation 之后插入提取步骤，例如：
 
-```yaml
+```yaml examples/search_o1.yaml
 pipeline:
   - generation.generate
   - custom.search_o1_query_extract

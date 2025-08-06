@@ -17,7 +17,7 @@ icon: "code-branch"
 
 我们可以这样编写 Router Tool：
 
-```python
+```python servers/router/src/router.py icon="python"
 @app.tool(output="ans_ls->ans_ls")
 def check_dont_know(ans_ls: List[str]) -> Dict[str, List[Dict[str, str]]]:
     ans_ls = [
