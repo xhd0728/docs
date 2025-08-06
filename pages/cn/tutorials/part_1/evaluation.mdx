@@ -3,18 +3,17 @@ title: "Evaluation Server"
 icon: "clipboard-check"
 ---
 
-## Server作用
+## 作用
 
-Evaluation Server提供一套完整的文本评估工具，支持多种常见的评估指标，用于在 pipeline 中对模型输出进行自动化评估。
+Evaluation Server 提供一套完整的文本评估工具，支持多种常见的评估指标，用于在 pipeline 中对模型输出进行自动化评估。
 
 ## 参数说明
 
 ```yaml
 # servers/evaluation/parameter.yaml
-metrics: [ 'acc', 'f1', 'em', 'coverem', 'stringem', 'rouge-1', 'rouge-2', 'rouge-l' ]
+metrics: [ 'acc', 'f1', 'em', 'coverem', 'rouge-l' ]
 save_path: output/asqa.json
 ```
-
 - `metrics`：指定要计算的评估指标，可以同时计算多个
 - `save_path`：结果日志存储地址
 
@@ -22,8 +21,10 @@ save_path: output/asqa.json
 
 - `evaluate`：对一组模型生成的答案进行评估，并将评估结果保存。
 
+## 评测指标
+
 | 指标名     | 类型    | 说明                                               |
-|------------|---------|----------------------------------------------------|
+|:------------|---------|:----------------------------------------------------|
 | `EM`         | float   | Exact Match，预测与任一参考完全相同。              |
 | `Acc`        | float   | Answer 包含参考答案中的任一形式（宽松匹配）。      |
 | `StringEM`   | float   | 针对多组答案的软匹配比例（常用于多选/嵌套 QA）。   |
