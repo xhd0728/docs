@@ -113,7 +113,7 @@ def webnote_fill_page(
     plan_ls: List[str],
     page_ls: List[str],
     subq_ls: List[str],
-    psg_ls: List[str],
+    psg_ls: List[Any],
     template: str | Path,
 ) -> List[PromptMessage]:
     template: Template = load_prompt_template(template)
@@ -146,7 +146,16 @@ def webnote_gen_answer(
 - `webnote_fill_page`：结合子查询结果，填充页面内容
 - `webnote_gen_answer`：整合页面信息生成最终答案
 
-每个函数都对应一个 `.jinja` 模板，请注意在 `parameter.yaml` 中为其命名单独的字段名。
+每个函数都对应一个 `.jinja` 模板。除此之外，请确保在 `servers/prompt/parameter.yaml` 中新增以下参数配置，以显式指定各模板路径：
+
+```yaml servers/prompt/parameter.yaml highlight={2-6}
+template: prompt/qa_boxed.jinja
+webnote_gen_plan_template: prompt/webnote_gen_plan.jinja
+webnote_init_page_template: prompt/webnote_init_page.jinja
+webnote_gen_subq_template: prompt/webnote_gen_subq.jinja
+webnote_fill_page_template: prompt/webnote_fill_page.jinja
+webnote_gen_answer_template: prompt/webnote_gen_answer.jinja
+```
 
 ### Step 2.2：实现 Router Server
 
@@ -249,18 +258,7 @@ pipeline:
 ultrarag build examples/webnote.yaml
 ```
 
-编辑生成的 `parameter/webnote_parameter.yaml` 来确保参数设置符合预期。例如：
-
-```yaml parameter/webnote_parameter.yaml
-prompt:
-  webnote_gen_plan_template: prompt/webnote_gen_plan.jinja
-  webnote_init_page_template: prompt/webnote_init_page.jinja
-  webnote_gen_subq_template: prompt/webnote_gen_subq.jinja
-  webnote_fill_page_template: prompt/webnote_fill_page.jinja
-  webnote_gen_answer_template: prompt/webnote_gen_answer.jinja
-```
-
-若不在 parameter.yaml 中为每个模板显式命名字段，而统一使用 `template:`，将可能导致 build 阶段参数冲突。`webnote_parameter.yaml` 的格式如下所示：
+`webnote_parameter.yaml` 的格式如下所示：
 
 ```yaml examples/webnote_parameter.yaml
 benchmark:
