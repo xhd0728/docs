@@ -7,12 +7,13 @@ icon: "arrow-right-arrow-left"
 
 ## 示例：Vanilla RAG Pipeline
 
-```yaml
+```yaml examples/rag.yaml
 # Vanilla RAG demo
 
 # MCP Server
 servers:
   benchmark: servers/benchmark
+  retriever: servers/retriever
   prompt: servers/prompt
   generation: servers/generation
   evaluation: servers/evaluation
@@ -21,7 +22,8 @@ servers:
 # MCP Client Pipeline
 pipeline:
 - benchmark.get_data
-- prompt.qa_boxed
+- retriever.retriever_deploy_search
+- prompt.qa_rag_boxed
 - generation.generate
 - custom.output_extract_from_boxed
 - evaluation.evaluate
@@ -29,10 +31,9 @@ pipeline:
 
 ## 说明
 
-在串行结构中，每一行代表调用一个注册的 Tool，其基本语法为：
+在串行结构中，每一行代表调用一个注册的 Tool，其基本语法为：`server_name.tool_name`
 
-- server_name.tool_name
-- server_name：表示调用的模块名，必须在 servers 部分提前定义；
-- tool_name：表示该模块中通过 @tool(...) 或 @prompt(...) 装饰器注册的函数。
+- `server_name`：表示调用的模块名，必须在 servers 部分提前定义；
+- `tool_name`：表示该模块中通过 @tool(...) 或 @prompt(...) 装饰器注册的函数。
 
 这种结构适用于大多数单轮问答或推理任务，也是理解更复杂流程（如循环、分支）前的基础。
