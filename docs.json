@@ -37,6 +37,7 @@
                       "pages/cn/tutorials/part_1/prompt",
                       "pages/cn/tutorials/part_1/generation",
                       "pages/cn/tutorials/part_1/evaluation",
+                      "pages/cn/tutorials/part_1/router",
                       "pages/cn/tutorials/part_1/custom"
                     ]
                   },
