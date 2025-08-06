@@ -3,9 +3,9 @@ title: "循环型 RAG Workflow"
 icon: "rotate-right"
 ---
 
-本节将带你实现一种典型的迭代推理能力的 RAG 工作流，IterRetGen。该流程支持基于模型输出反复更新查询，从而逐步收敛至更优的答案。
+本节将带你实现一种典型的迭代推理能力的 RAG 工作流：**IterRetGen**。该流程支持基于模型输出反复更新查询，从而逐步收敛至更优的答案。
 
-> 原始论文详见：https://arxiv.org/pdf/2305.15294
+> 论文：https://arxiv.org/pdf/2305.15294
 
 ## Step 1: 明确工作流结构
 
@@ -23,13 +23,11 @@ icon: "rotate-right"
 - 该过程按照设定的最大循环次数执行 N 次
 - 除了 prompt 和 custom 两个模块需自定义实现，其他功能均可直接复用 UltraRAG 内置工具。
 
-## Step 2: 实现必要Tool
+## Step 2: 实现必要 Tool
 
-### Step 2.1 :实现custom.iterretgen_nextquery 
+IterRetGen 通过拼接查询 query 和当前轮次生成的答案作为本轮查询，为此在 `servers/custom/src/custom.py` 中添加如下代码：
 
-IterRetGen通过拼接查询query和当前轮次生成的答案作为本轮查询，为此在 servers/custom/src/custom.py 中添加如下代码：
-
-```python
+```python servers/custom/src/custom.py icon="python"
 @app.tool(output="q_ls,ret_psg->nextq_ls")
 def iterretgen_nextquery(
     q_ls: List[str],
@@ -44,9 +42,9 @@ def iterretgen_nextquery(
 
 ## Step 3: 编写 Pipeline 配置文件
 
-在 examples/ 目录下新建一个 YAML 文件，如 IterRetGen.yaml：
+在 `examples/` 目录下新建一个 YAML 文件，如 `IterRetGen.yaml`：
 
-```yaml
+```yaml examples/IterRetGen.yaml
 # IterRetGen demo
 
 # MCP Server
@@ -88,9 +86,9 @@ pipeline:
 ultrarag build examples/IterRetGen.yaml
 ```
 
-打开生成的 examples/parameter/IterRetGen_parameter.yaml，修改如下配置：
+打开生成的 `examples/parameter/IterRetGen_parameter.yaml`，修改如下配置：
 
-```yaml
+```yaml examples/parameter/IterRetGen_parameter.yaml
 benchmark:
   benchmark:
     key_map:

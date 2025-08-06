@@ -15,17 +15,17 @@ Vanilla RAG 的最基本流程如下：
 
 ## Step 2：实现必要Tool
 
-在该流程中，我们希望模型的最终答案以 \boxed{} 包裹，以便后续自动提取。因此，我们需要：
+在该流程中，我们希望模型的最终答案以 `\boxed{}` 包裹，以便后续自动提取。因此，我们需要：
 
 - 自定义一个 Prompt Tool：将问题与检索内容构造成标准化的生成输入；
-- 自定义一个 Tool：提取 \boxed{} 中的答案文本；
+- 自定义一个 Tool：提取 `\boxed{}` 中的答案文本；
 - 其余模块（检索、生成、评估）均可复用 UltraRAG 的现有组件。
 
-### Step 2.1: 实现prompt.qa_rag_boxed
+### Step 2.1: 构建 Prompt
 
-首先准备 Prompt 模板文件 prompt/qa_boxed.jinja：
+首先准备 Prompt 模板文件 `prompt/qa_boxed.jinja`：
 
-```jinja
+```jinja prompt/qa_boxed.jinja
 Please answer the following question.
 Think step by step.
 Provide your final answer in the format \boxed{YOUR_ANSWER}.
@@ -35,7 +35,7 @@ Question: {{question}}
 
 然后，在 Prompt Server 中实现如下 Tool：
 
-```python
+```python servers/prompt/src/prompt.py icon="python"
 # prompt for QA RAG boxed
 @app.prompt(output="q_ls,ret_psg,template->prompt_ls")
 def qa_rag_boxed(
@@ -50,11 +50,11 @@ def qa_rag_boxed(
     return ret
 ```
 
-### Step 2.2: 实现custom.output_extract_from_boxed
+### Step 2.2: 提取答案
 
-为了从模型输出中提取 \boxed{} 包裹的答案，可以在 Custom Server 中实现如下 Tool：
+为了从模型输出中提取 `\boxed{}` 包裹的答案，可以在 Custom Server 中实现如下 Tool：
 
-```python
+```python servers/custom/src/custom.py icon="python"
 @app.tool(output="ans_ls->pred_ls")
 def output_extract_from_boxed(ans_ls: List[str]) -> Dict[str, List[str]]:
     def extract(ans: str) -> str:
@@ -87,9 +87,9 @@ def output_extract_from_boxed(ans_ls: List[str]) -> Dict[str, List[str]]:
 
 ## Step 3：编写 Pipeline 配置文件
 
-完成上述代码开发后，在 examples/ 目录下创建一个新的配置文件：vanilla_rag.yaml。
+完成上述代码开发后，在 `examples/` 目录下创建一个新的配置文件：`vanilla_rag.yaml`。
 
-```yaml
+```yaml examples/vanilla_rag.yaml
 # Vanilla RAG
 
 # MCP Server
@@ -114,7 +114,7 @@ pipeline:
 - evaluation.evaluate
 ```
 
-## Step 4：配置 Pipeline参数
+## Step 4：配置 Pipeline 参数
 
 执行下列命令：
 
@@ -122,7 +122,7 @@ pipeline:
 ultrarag build examples/vanilla_rag.yaml
 ```
 
-打开生成的 examples/parameter/vanilla_rag_parameter.yaml，修改如下配置：
+打开生成的 `examples/parameter/vanilla_rag_parameter.yaml`，修改如下配置：
 
 ```yaml
 benchmark:
@@ -175,7 +175,7 @@ ultrarag run examples/vanilla_rag.yaml
 
 ### 评估结果
 
-模型预测结果将自动评估，并保存至 evaluation server 中配置的 save_path 路径。例如：
+模型预测结果将自动评估，并保存至 Evaluation Server 中配置的 `save_path` 路径。例如：
 
 ```shell
 output/asqa.json
@@ -183,7 +183,7 @@ output/asqa.json
 
 ### 运行日志
 
-推理过程中的详细日志会保存在 logs/ 目录下，文件名基于运行时间生成，便于检索和复现。例如：
+推理过程中的详细日志会保存在 `logs/` 目录下，文件名基于运行时间生成，便于检索和复现。例如：
 
 ```shell
 logs/20250804_193900.log
@@ -191,7 +191,7 @@ logs/20250804_193900.log
 
 ### 中间结果文件
 
-所有流程执行过程中的中间结果（包括每一步输入输出）将记录为 memory 文件，默认保存在 output/ 目录，例如：
+所有流程执行过程中的中间结果（包括每一步输入输出）将记录为 `memory` 文件，默认保存在 `output/` 目录，例如：
 
 ```shell
 output/memory_asqa_vanilla_rag_20250804_193900.json

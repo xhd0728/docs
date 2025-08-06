@@ -3,11 +3,11 @@ title: "基于多轮中间结果的 RAG Workflow"
 icon: "layer-group"
 ---
 
-本节将实现一个更加复杂的多轮 RAG 推理流程 —— IRCoT（Iterative Retrieval with Chain-of-Thought）。
+本节将实现一个更加复杂的多轮 RAG 推理流程：**IRCoT**。
 
-> 原始论文详见：https://arxiv.org/pdf/2212.10509
+> 论文：https://arxiv.org/pdf/2212.10509
 
-IRCoT 的核心思想是：在每一轮中，模型基于当前检索到的文档、历史推理链和问题生成新的推理内容（CoT），并据此触发下一轮检索。 这一交替式的循环可持续推进推理深度，直至满足终止条件（如明确回答已生成）。因此，它需要对多轮中间结果进行有效记录与访问 —— 这正是 UltraRAG 中 Memory 机制的用武之地。
+IRCoT 的核心思想是：在每一轮中，模型基于当前检索到的文档、历史推理链和问题生成新的推理内容（CoT），并据此触发下一轮检索。 这一交替式的循环可持续推进推理深度，直至满足终止条件（如明确回答已生成）。因此，它需要对多轮中间结果进行有效记录与访问——这正是 UltraRAG 中 Memory 机制的用武之地。
 
 ## Step 1：明确工作流结构
 
@@ -27,15 +27,17 @@ IRCoT 的推理过程包括如下步骤：
 - 构造下一轮查询：用于构造下一轮的检索查询，每轮检索使用模型生成CoT内容的第一句话；
 - 答案抽取：从生成文本中提取最终答案内容。
 
-为了访问到此前的CoT以及检索历史记录，需要使用UltraRAG实现的Memory中间变量存储机制，只需在变量名前拼接memory_即可访问之前每轮迭代的中间结果。关于这部分，请参考教程【Memory：UltraRAG的中间变量存储机制】。
+为了访问到此前的 CoT 以及检索历史记录，需要使用 UltraRAG 实现的 Memory 中间变量存储机制，只需在变量名前拼接 `memory_` 即可访问之前每轮迭代的中间结果。
+
+<Note>关于这部分，请参考教程 [中间变量存储机制]()。</Note>
 
 ## Step 2：实现必要tool
 
-### Step 2.1:  实现ircot_next_prompt
+### Step 2.1：实现 ircot_next_prompt
 
-首先，在 prompt/IRCoT.jinja 中定义提示模板，样例如下：
+首先，在 `prompt/IRCoT.jinja` 中定义提示模板，样例如下：
 
-```jinja
+```jinja prompt/IRCoT.jinja
 You serve as an intelligent assistant, adept at facilitating users through complex, multi-hop reasoning across multiple documents. This task is illustrated through demonstrations, each consisting of a document set paired with a relevant question and its multi-hop reasoning thoughts. Your task is to generate one thought for current step, DON'T generate the whole thoughts at once! If you reach what you believe to be the final step, start with "So the answer is:".
 
 Wikipedia Title: Kurram Garhi
@@ -62,9 +64,9 @@ Question: {{question}}
 Thought: {{cur_answer}}
 ```
 
-然后，在 prompt server 中添加：
+然后，在 Prompt Server 中添加：
 
-```python
+```python servers/prompt/src/prompt.py icon="python"
 # prompt for IRCOT
 @app.prompt(output="memory_q_ls,memory_ret_psg,template->prompt_ls")
 def ircot_next_prompt(
@@ -114,11 +116,11 @@ def ircot_next_prompt(
 
 该函数会自动拼接每一轮的历史检索结果和历史 CoT，并传入当前模板渲染，构造模型输入。
 
-### Step2.2：实现router.ircot_check_end
+### Step 2.2：实现 router.ircot_check_end
 
 用于检测模型生成内容中是否包含 "So the answer is:"：
 
-```python
+```python servers/router/src/router.py icon="python"
 @app.tool(output="ans_ls->ans_ls")
 def ircot_check_end(ans_ls: List[str]) -> Dict[str, List[Dict[str, str]]]:
     ans_ls = [
@@ -133,11 +135,11 @@ def ircot_check_end(ans_ls: List[str]) -> Dict[str, List[Dict[str, str]]]:
 
 返回每条样本是否完成（state: complete / incomplete）。
 
-### Step2.3：实现custom.ircot_get_first_sent
+### Step 2.3：实现 custom.ircot_get_first_sent
 
-由于IRCoT在每次检索时，使用的都是当前模型生成内容的第一句话作为数据，因此需要在custom中额外实现一个单独的提取第一句话的逻辑代码：
+由于 IRCoT 在每次检索时，使用的都是当前模型生成内容的第一句话作为数据，因此需要在 Custom Server 中额外实现一个单独的提取第一句话的逻辑代码：
 
-```python
+```python servers/custom/src/custom.py icon="python"
 @app.tool(output="ans_ls->q_ls")
 def ircot_get_first_sent(
     ans_ls: List[str],
@@ -152,7 +154,7 @@ def ircot_get_first_sent(
     return {"q_ls": ret}
 ```
 
-### Step2.4：实现custom.ircot_extract_ans
+### Step 2.4：实现 custom.ircot_extract_ans
 
 用于从最后一轮模型生成内容中抽取具体答案：
 
@@ -170,11 +172,11 @@ def ircot_extract_ans(ans_ls: List[str]) -> Dict[str, List[str]]:
     return {"pred_ls": ret}
 ```
 
-## Step 3：编写pipeline配置文件
+## Step 3：编写 Pipeline 配置文件
 
 完成上述 Tool 后，即可使用以下 YAML 文件构建 IRCoT 推理流程：
 
-```yaml
+```yaml examples/IRCoT.yaml
 # MCP Server
 servers:
   benchmark: servers/benchmark
@@ -215,7 +217,7 @@ pipeline:
 - evaluation.evaluate
 ```
 
-## Step 4：配置 Pipeline参数
+## Step 4：配置 Pipeline 参数
 
 执行命令构建参数模板：
 
@@ -223,9 +225,9 @@ pipeline:
 ultrarag build examples/IRCoT.yaml
 ```
 
-然后编辑生成的 examples/parameter/IRCoT_parameter.yaml，配置如下内容：
+然后编辑生成的 `examples/parameter/IRCoT_parameter.yaml`，配置如下内容：
 
-```yaml
+```yaml examples/parameter/IRCoT_parameter.yaml
 benchmark:
   benchmark:
     key_map:

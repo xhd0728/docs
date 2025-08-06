@@ -11,7 +11,7 @@ icon: "flask"
 
 该算法包含以下关键阶段：
 
-1. 初始化规划与页面结构
+### Step 1.1：初始化规划与页面结构
 
 大模型基于原始问题生成一个完整的 Plan（结构化的页面规划），并构建带有 [待补充] 占位符的初始页面。
 
@@ -22,8 +22,6 @@ Question: 《夜之摇滚人》的演唱者在《欲望的旋律》中饰演了�
 ```
 
 示例 Plan：
-
-Plan:
 
 ```json
 {
@@ -38,9 +36,8 @@ Plan:
       ]
     }... 
 ```
-初始页面：
 
-初始page:
+初始页面：
 
 ```markdown
 # 识别《夜之摇滚人》的演唱者及其在《欲望的旋律》中的角色
@@ -52,25 +49,25 @@ Plan:
 [待补充]
 ```
 
-2. 进入迭代流程
+### Step 1.2：进入迭代流程
 
 每一轮中，模型：
 
-  - 拆解当前待补充内容，生成子问题（Sub-question）
-  - 对子问题进行检索，返回文档
-  - 基于当前 Plan、页面与文档内容更新页面中对应段落
+- 拆解当前待补充内容，生成子问题（Sub-question）
+- 对子问题进行检索，返回文档
+- 基于当前 Plan、页面与文档内容更新页面中对应段落
 
 该过程会持续进行，直到：
   - 页面中已无 [待补充] 内容
   - 或达到最大迭代轮数（默认 10 轮）
 
-## Step 2：实现必要Tool
+## Step 2：实现必要 Tool
 
-### Step 2.1 :实现prompt server用到的函数
+### Step 2.1：实现 prompt server 用到的函数
 
-提示模版位于 prompt/ 目录，函数实现于 servers/prompt/src/prompt.py，每个函数绑定一个模板文件，需在 parameter.yaml 中单独注册字段（避免冲突）：
+提示模版位于 `prompt/` 目录，函数实现于 `servers/prompt/src/prompt.py`，每个函数绑定一个模板文件，需在 `parameter.yaml` 中单独注册字段（避免冲突）：
 
-```python
+```python servers/prompt/src/prompt.py icon="python"
 @app.prompt(output="q_ls,plan_ls,webnote_init_page_template->prompt_ls")
 def webnote_init_page(
     q_ls: List[str],
@@ -143,19 +140,19 @@ def webnote_gen_answer(
 
 完整函数列表如下：
 
-- webnote_gen_plan：根据问题生成结构化 Plan
-- webnote_init_page：根据 Plan 构建初始页面
-- webnote_gen_subq：生成子查询
-- webnote_fill_page：结合子查询结果，填充页面内容
-- webnote_gen_answer：整合页面信息生成最终答案
+- `webnote_gen_plan`：根据问题生成结构化 Plan
+- `webnote_init_page`：根据 Plan 构建初始页面
+- `webnote_gen_subq`：生成子查询
+- `webnote_fill_page`：结合子查询结果，填充页面内容
+- `webnote_gen_answer`：整合页面信息生成最终答案
 
-每个函数都对应一个 .jinja 模板，请注意在 parameter.yaml 中为其命名单独的字段名。
+每个函数都对应一个 `.jinja` 模板，请注意在 `parameter.yaml` 中为其命名单独的字段名。
 
-### Step 2.2: 实现router server用到的函数
+### Step 2.2：实现 Router Server
 
-用于判断当前页面是否已完成填充。若仍存在 [to be filled] 等占位符，标记为 incomplete，继续循环，否则终止流程。
+用于判断当前页面是否已完成填充。若仍存在 `[to be filled]` 等占位符，标记为 `incomplete`，继续循环，否则终止流程。
 
-```python
+```python servers/router/src/router.py icon="python"
 @app.tool(output="page_ls->page_ls")
 def webnote_check_page(page_ls: List[str]) -> Dict[str, List[Dict[str, str]]]:
     """Check if the page is complete or incomplete.
@@ -174,11 +171,11 @@ def webnote_check_page(page_ls: List[str]) -> Dict[str, List[Dict[str, str]]]:
     return {"page_ls": page_ls}
 ```
 
-## Step 3: 编写 Pipeline 配置文件
+## Step 3：编写 Pipeline 配置文件
 
-在 examples/webnote.yaml 中定义如下模块结构和执行流程：
+在 `examples/webnote.yaml` 中定义如下模块结构和执行流程：
 
-```yaml
+```yaml examples/webnote.yaml
 servers:
   benchmark: servers/benchmark
   generation: servers/generation
@@ -244,7 +241,7 @@ pipeline:
 - evaluation.evaluate
 ```
 
-## Step 4：配置 Pipeline参数
+## Step 4：配置 Pipeline 参数
 
 执行以下命令构建参数模板：
 
@@ -252,9 +249,9 @@ pipeline:
 ultrarag build examples/webnote.yaml
 ```
 
-之后，编辑生成的 parameter/webnote_parameter.yaml 来确保参数设置符合预期。例如：
+编辑生成的 `parameter/webnote_parameter.yaml` 来确保参数设置符合预期。例如：
 
-```yaml
+```yaml parameter/webnote_parameter.yaml
 prompt:
   webnote_gen_plan_template: prompt/webnote_gen_plan.jinja
   webnote_init_page_template: prompt/webnote_init_page.jinja
@@ -263,11 +260,9 @@ prompt:
   webnote_gen_answer_template: prompt/webnote_gen_answer.jinja
 ```
 
-若不在 parameter.yaml 中为每个模板显式命名字段，而统一使用 template:，将可能导致 build 阶段参数冲突。
+若不在 parameter.yaml 中为每个模板显式命名字段，而统一使用 `template:`，将可能导致 build 阶段参数冲突。`webnote_parameter.yaml` 的格式如下所示：
 
-webnote_parameter.yaml的格式如下所示：
-
-```yaml
+```yaml examples/webnote_parameter.yaml
 benchmark:
   benchmark:
     key_map:

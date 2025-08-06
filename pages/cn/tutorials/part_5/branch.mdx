@@ -3,15 +3,15 @@ title: "分支型 RAG Workflow"
 icon: "code-branch"
 ---
 
-本节将带你实现一个具备「分支决策能力」的 RAG 推理流程 —— Search-o1。
+本节将带你实现一个具备**分支决策能力**的 RAG 推理流程：**Search-o1**。
 
-> 论文链接：https://arxiv.org/pdf/2501.05366。
+> 论文：https://arxiv.org/pdf/2501.05366。
 
 Search-o1 的核心思想是让大模型在推理过程中自主判断何时缺乏知识，并主动生成搜索查询以调用外部检索模块获取补充文档。随后通过设计的 Reason-in-Documents 模块对冗长检索结果进行“分析—精炼”，提取有用信息再注入后续推理，从而减少噪声干扰。
 
-## Step 1: 明确工作流结构
+## Step 1：明确工作流结构
 
-我们首先回顾官方提出的 Search-o1 算法流程图：
+我们首先回顾 Search-o1 算法流程图：
 
 ![](/images/part_5/search_o1.png)
 
@@ -21,9 +21,9 @@ Search-o1 的核心思想是让大模型在推理过程中自主判断何时缺�
 
 其中 prompt、router 和 custom 模块中涉及的 Tool 需要由用户自定义实现；其余组件（如生成、检索、评估）可复用 UltraRAG 提供的标准 Server。
 
-## Step 2: 实现必要Tool
+## Step 2：实现必要Tool
 
-### Step 2.1 ：实现 Prompt Server 相关函数
+### Step 2.1：实现 Prompt Server
 
 在 Search-o1 推理流程中，Prompt Server 主要承担两个任务：
 
@@ -32,13 +32,13 @@ Search-o1 的核心思想是让大模型在推理过程中自主判断何时缺�
 
 以下是需要实现的 3 个工具函数及其配套模板。
 
-#### search_o1_init：初始化推理模板
+**search_o1_init：初始化推理模板**
 
 该工具用于构造初始模型提示语，引导模型理解其拥有“搜索工具”，并说明使用规则。
 
-首先，在 prompt/search_o1_reasoning.jinja 中定义提示模板，样例如下：
+首先，在 `prompt/search_o1_reasoning.jinja` 中定义提示模板，样例如下：
 
-```jinja
+```jinja prompt/search_o1_reasoning.jinja
 You are a reasoning assistant with the ability to perform web searches to help you answer the user’s question
 accurately. You have special tools:
 To perform a search: write <|begin_search_query|> your query here <|end_search_query|>.
@@ -65,7 +65,7 @@ Question:\n{{question}}\n\n
 
 对应工具函数：
 
-```python
+```python servers/prompt/src/prompt.py icon="python"
 @app.prompt(output="q_ls, template -> prompt_ls")
 def search_o1_init(
     q_ls: List[str],
@@ -81,13 +81,13 @@ def search_o1_init(
     return ret
 ```
 
-#### searcho1_reasoning_indocument：阅读文档后再推理
+**searcho1_reasoning_indocument：阅读文档后再推理**
 
 该工具用于将搜索结果注入模型输入中，帮助模型对检索结果进行分析并继续 reasoning。
 
-请新建模板 prompt/search_o1_refinement.jinja，示例如下：
+请新建模板 `prompt/search_o1_refinement.jinja`，示例如下：
 
-```jinja
+```jinja prompt/search_o1_refinement.jinja
 **Task Instruction:**
 
 You are tasked with reading and analyzing web pages based on the following inputs: **Previous Reasoning Steps**, **Current Search Query**, and **Searched Web Pages**. Your objective is to extract relevant and helpful information for **Current Search Query** from the **Searched Web Pages** and seamlessly integrate this information into the **Previous Reasoning Steps** to continue reasoning for the original question.
@@ -129,7 +129,7 @@ Now you should analyze each web page and find helpful information based on the c
 
 对应工具函数实现如下：
 
-```python
+```python servers/prompt/src/prompt.py icon="python"
 @app.prompt(
     output="prompt_ls,extract_query_list,ret_psg,reasoning_indoc_template->prompt_ls"
 )
@@ -153,21 +153,20 @@ def searcho1_reasoning_indocument(
     return ret
 ```
 
-为了让该 tool 使用独立的模板参数 reasoning_indoc_template，请不要忘了在 servers/prompt/parameter.yaml 中显式注册：
+为了让该 tool 使用独立的模板参数 `reasoning_indoc_template`，请不要忘了在 `servers/prompt/parameter.yaml` 中显式注册：
 
-```yaml
-# servers/prompt/parameter.yaml
+```yaml servers/prompt/parameter.yaml
 template: prompt/qa_boxed.jinja
 reasoning_indoc_template: prompt/qa_boxed.jinja
 ```
 
 这样可以避免多个 prompt 工具复用相同的模板参数导致 build 后配置被覆盖的问题。
 
-#### search_o1_insert：将文档作为搜索结果插入推理上下文
+**search_o1_insert：将文档作为搜索结果插入推理上下文**
 
 该工具不依赖模板，直接将搜索结果作为 `<|begin_search_result|>`...`<|end_search_result|>` 内容追加到现有 prompt 中：
 
-```python
+```python servers/prompt/src/prompt.py icon="python"
 @app.prompt(output="prompt_ls,ans_ls->prompt_ls")
 def search_o1_insert(
     prompt_ls: List[PromptMessage],
@@ -181,11 +180,11 @@ def search_o1_insert(
     return ret
 ```
 
-### Step 2.2 :实现router server用到的函数
+### Step 2.2：实现 Router Server
 
-在 servers/router/src/router.py 中添加：
+在 `servers/router/src/router.py` 中添加：
 
-```python
+```python servers/router/src/router.py icon="python"
 @app.tool(output="ans_ls->ans_ls")
 def search_o1_check(ans_ls: List[str]) -> Dict[str, List[Dict[str, str]]]:
     def get_eos(text):
@@ -207,11 +206,11 @@ def search_o1_check(ans_ls: List[str]) -> Dict[str, List[Dict[str, str]]]:
 
 判断是否继续检索，核心依据是是否命中 `<|im_end|>` 或 `<|end_search_query|>` 等终止符。
 
-### Step 2.3 :实现custom server用到的函数
+### Step 2.3：实现 Custom Server
 
-在 servers/custom/src/custom.py 中添加：
+在` servers/custom/src/custom.py` 中添加：
 
-```python
+```python servers/custom/src/custom.py icon="python"
 @app.tool(output="ans_ls->extract_query_list")
 def search_r1_query_extract(ans_ls: List[str]) -> Dict[str, List[str]]:
 
@@ -237,11 +236,11 @@ def search_r1_query_extract(ans_ls: List[str]) -> Dict[str, List[str]]:
 
 提取生成文本中的 `<search>` 标签内的查询字符串。
 
-## Step 3： 编写Pipeline配置文件
+## Step 3：编写 Pipeline 配置文件
 
-按照上述流程，在examples下新建一个search_o1.yaml：
+按照上述流程，在 `examples/` 下新建一个 `search_o1.yaml`：
 
-```yaml
+```yaml examples/search_o1.yaml
 # Search-o1 demo
 
 # MCP Servers
@@ -290,7 +289,7 @@ pipeline:
       pred_ls: ans_ls
 ```
 
-## Step 4：配置 Pipeline参数
+## Step 4：配置 Pipeline 参数
 
 执行下列命令：
 
@@ -298,9 +297,9 @@ pipeline:
 ultrarag build examples/search_o1.yaml
 ```
 
-打开生成的 examples/parameter/search_o1.yaml，可根据需求修改 benchmark、retriever、generation 等参数配置，或提前在各 server 下的 parameter.yaml 文件中设置默认值再进行 build。
+打开生成的 `examples/parameter/search_o1.yaml`，可根据需求修改 benchmark、retriever、generation 等参数配置，或提前在各 Server 下的 `parameter.yaml` 文件中设置默认值再进行 build。
 
-```yaml
+```yaml examples/parameter/search_o1.yaml
 benchmark:
   benchmark:
     key_map:
