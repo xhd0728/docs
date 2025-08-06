@@ -3,11 +3,9 @@ title: "Custom Server"
 icon: "puzzle-piece"
 ---
 
-## Server 作用
+## 作用
 
-`Custom Server` 是专门用于存放无法归类到标准模块（如 `Retriever`、`Generation`、`Evaluation` 等）中的自定义工具函数（`Tool`）的 Server。
-
-所有不属于核心 Server 的逻辑工具（如数据清洗、关键词提取、特定规则逻辑等）都可以归入 `Custom Server`。
+Custom Server 是一个专门用于存放无法归类到标准模块（如 Retriever、Generation、Evaluation 等）中的自定义工具函数（Tool）的 Server。所有不属于核心 Server 的逻辑工具（如：数据清洗、关键词提取、特定规则逻辑等）都可以归入 Custom Server。
 
 ## 示例：Search-o1 的查询提取 Tool
 
@@ -39,7 +37,7 @@ def search_o1_query_extract(ans_ls: List[str]) -> Dict[str, List[str]]:
     return {"extract_query_list": query}
 ```
 
-这个 Tool 的典型应用是在 `generation` 之后插入提取步骤，例如：
+这个 Tool 的典型应用是在 generation 之后插入提取步骤，例如：
 
 ```yaml
 pipeline:
