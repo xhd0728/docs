@@ -67,7 +67,8 @@
                     "pages": [
                       "pages/cn/tutorials/part_4/debug",
                       "pages/cn/tutorials/part_4/deploy_retriever_serve",
-                      "pages/cn/tutorials/part_4/multi_agent"
+                      "pages/cn/tutorials/part_4/multi_agent",
+                      "pages/cn/tutorials/part_4/memory"
                     ]
                   },
                   {

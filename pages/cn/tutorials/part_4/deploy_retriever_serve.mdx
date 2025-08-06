@@ -70,9 +70,9 @@ nohup ultrarag run examples/deploy_retriever.yaml > retriever.log 2>&1 &
 
 服务启动后将监听指定端口，等待接收来自其他流程的检索请求。
 
-## 调用在线retriever服务
+## 调用在线 retriever 服务
 
-调用在线服务仅需在 pipeline 中使用 retriever.retriever_deploy_search 工具（不再需要初始化 retriever）：
+调用在线服务仅需在 pipeline 中使用 `retriever.retriever_deploy_search` 工具（不再需要初始化 retriever）：
 
 ```yaml
 servers:
