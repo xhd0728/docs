@@ -155,7 +155,7 @@ def searcho1_reasoning_indocument(
 
 为了让该 tool 使用独立的模板参数 `reasoning_indoc_template`，请不要忘了在 `servers/prompt/parameter.yaml` 中显式注册：
 
-```yaml servers/prompt/parameter.yaml
+```yaml servers/prompt/parameter.yaml icon="/images/yaml.svg"
 template: prompt/qa_boxed.jinja
 reasoning_indoc_template: prompt/qa_boxed.jinja
 ```
@@ -240,7 +240,7 @@ def search_r1_query_extract(ans_ls: List[str]) -> Dict[str, List[str]]:
 
 按照上述流程，在 `examples/` 下新建一个 `search_o1.yaml`：
 
-```yaml examples/search_o1.yaml
+```yaml examples/search_o1.yaml icon="/images/yaml.svg"
 # Search-o1 demo
 
 # MCP Servers
@@ -299,7 +299,7 @@ ultrarag build examples/search_o1.yaml
 
 打开生成的 `examples/parameter/search_o1.yaml`，可根据需求修改 benchmark、retriever、generation 等参数配置，或提前在各 Server 下的 `parameter.yaml` 文件中设置默认值再进行 build。
 
-```yaml examples/parameter/search_o1.yaml
+```yaml examples/parameter/search_o1.yaml icon="/images/yaml.svg"
 benchmark:
   benchmark:
     key_map:
@@ -333,8 +333,8 @@ generation:
     temperature: 0.7
     top_p: 0.8
 prompt:
-  reasoning_indoc_template: prompt/qa_boxed.jinja
-  template: prompt/qa_boxed.jinja
+  reasoning_indoc_template: prompt/search_o1_refinement.jinja
+  template: prompt/search_o1_reasoning.jinja
 retriever:
   query_instruction: 'Query: '
   retriever_url: http://localhost:8080

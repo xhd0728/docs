@@ -176,7 +176,7 @@ def ircot_extract_ans(ans_ls: List[str]) -> Dict[str, List[str]]:
 
 完成上述 Tool 后，即可使用以下 YAML 文件构建 IRCoT 推理流程：
 
-```yaml examples/IRCoT.yaml
+```yaml examples/IRCoT.yaml icon="/images/yaml.svg"
 # MCP Server
 servers:
   benchmark: servers/benchmark
@@ -227,7 +227,7 @@ ultrarag build examples/IRCoT.yaml
 
 然后编辑生成的 `examples/parameter/IRCoT_parameter.yaml`，配置如下内容：
 
-```yaml examples/parameter/IRCoT_parameter.yaml
+```yaml examples/parameter/IRCoT_parameter.yaml icon="/images/yaml.svg"
 benchmark:
   benchmark:
     key_map:
@@ -261,7 +261,7 @@ generation:
     temperature: 0.7
     top_p: 0.8
 prompt:
-  template: prompt/qa_boxed.jinja
+  template: prompt/IRCoT.jinja
 retriever:
   query_instruction: 'Query: '
   retriever_url: http://localhost:8080

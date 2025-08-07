@@ -148,7 +148,7 @@ def webnote_gen_answer(
 
 每个函数都对应一个 `.jinja` 模板。除此之外，请确保在 `servers/prompt/parameter.yaml` 中新增以下参数配置，以显式指定各模板路径：
 
-```yaml servers/prompt/parameter.yaml highlight={2-6}
+```yaml servers/prompt/parameter.yaml icon="/images/yaml.svg" highlight={2-6}
 template: prompt/qa_boxed.jinja
 webnote_gen_plan_template: prompt/webnote_gen_plan.jinja
 webnote_init_page_template: prompt/webnote_init_page.jinja
@@ -184,7 +184,10 @@ def webnote_check_page(page_ls: List[str]) -> Dict[str, List[Dict[str, str]]]:
 
 在 `examples/webnote.yaml` 中定义如下模块结构和执行流程：
 
-```yaml examples/webnote.yaml
+```yaml examples/webnote.yaml icon="/images/yaml.svg"
+# WebNote demo
+
+# MCP Server
 servers:
   benchmark: servers/benchmark
   generation: servers/generation
@@ -193,16 +196,14 @@ servers:
   evaluation: servers/evaluation
   custom: servers/custom
   router: servers/router
-  
+
 # MCP Client Pipeline
 pipeline:
-# 初始化检索服务
-- retriever.retriever_init
-- retriever.retriever_embed
-- retriever.retriever_index
-- generation.initialize_local_vllm
-# 加载数据集
 - benchmark.get_data
+# 初始化检索服务
+- retriever.retriever_deploy_search
+# 加载数据集
+
 # 生成plan
 - prompt.webnote_gen_plan
 - generation.generate:
@@ -230,7 +231,7 @@ pipeline:
               output:
                 ans_ls: subq_ls
           # 检索答案
-          - retriever.retriever_search:
+          - retriever.retriever_deploy_search:
               input:
                 query_list: subq_ls
               output:
@@ -260,7 +261,7 @@ ultrarag build examples/webnote.yaml
 
 `webnote_parameter.yaml` 的格式如下所示：
 
-```yaml examples/webnote_parameter.yaml
+```yaml examples/webnote_parameter.yaml icon="/images/yaml.svg"
 benchmark:
   benchmark:
     key_map:
@@ -280,13 +281,10 @@ evaluation:
   - rouge-1
   - rouge-2
   - rouge-l
-  save_path: output/asqa.json
+  save_path: output/nq.json
 generation:
-  api_key: ''
-  base_url: http://0.0.0.0:8021/v1
-  gpu_ids: '6'
-  model_name: model/Qwen2.5-7B-Instruct
-  port: 8021
+  base_url: http://localhost:8000/v1
+  model_name: openbmb/MiniCPM4-8B
   sampling_params:
     extra_body:
       chat_template_kwargs:
@@ -300,25 +298,12 @@ prompt:
   webnote_fill_page_template: prompt/webnote_fill_page.jinja
   webnote_gen_answer_template: prompt/webnote_gen_answer.jinja
   webnote_gen_plan_template: prompt/webnote_gen_plan.jinja
-  webnote_gen_subq_template: prompt/webnote_fill_page.jinja
+  webnote_gen_subq_template: prompt/webnote_gen_subq.jinja
   webnote_init_page_template: prompt/webnote_init_page.jinja
 retriever:
-  corpus_path: data/sample_hotpotqa_corpus_5.jsonl
-  cuda_devices: '4'
-  embedding_path: embedding/embedding.npy
-  faiss_use_gpu: false
-  index_chunk_size: 50000
-  index_path: index/index.index
-  infinity_kwargs:
-    batch_size: 1024
-    bettertransformer: false
-    device: cuda
-    pooling_method: auto
-  overwrite: false
   query_instruction: 'Query: '
-  retriever_path: model/bge-large-en
+  retriever_url: http://localhost:8080
   top_k: 5
-  use_openai: false
 ```
 
 ## Step 5：运行你的推理流程！

@@ -48,7 +48,7 @@ def qa_rag_boxed(
 
 1. 在 YAML 配置文件中注册 Prompt Server 并调用你实现的 Tool：
 
-```yaml servers/prompt/parameter.yaml
+```yaml servers/prompt/parameter.yaml icon="/images/yaml.svg"
 # MCP Server
 servers:
   generation: servers/generation
@@ -62,7 +62,7 @@ pipeline:
 
 2. 构建后，修改运行时参数，指定你的模板文件路径：
 
-```yaml servers/prompt/parameter.yaml
+```yaml servers/prompt/parameter.yaml icon="/images/yaml.svg"
 prompt:
   template: prompt/qa_rag_boxed.jinja
 ```
@@ -84,7 +84,7 @@ def qa_rag_boxed_2(
 ```
 为上述两个工具分别绑定模板路径，在 `servers/prompt/parameter.yaml` 中添加：
 
-```yaml servers/prompt/parameter.yaml
+```yaml servers/prompt/parameter.yaml icon="/images/yaml.svg"
 template1: prompt/qa_boxed.jinja
 template2: prompt/qa_boxed.jinja
 ```

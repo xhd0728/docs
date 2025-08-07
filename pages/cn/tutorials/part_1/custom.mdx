@@ -39,7 +39,7 @@ def search_o1_query_extract(ans_ls: List[str]) -> Dict[str, List[str]]:
 
 这个 Tool 的典型应用是在 generation 之后插入提取步骤，例如：
 
-```yaml examples/search_o1.yaml
+```yaml examples/search_o1.yaml icon="/images/yaml.svg"
 pipeline:
   - generation.generate
   - custom.search_o1_query_extract
