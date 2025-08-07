@@ -119,5 +119,13 @@
     "socials": {
       "github": "https://github.com/ultrarag/UltraRAG-MCP"
     }
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-S6SKS1CJRG"
+    },
+    "gtm": {
+      "tagId": "GTM-5KL4LNM2"
+    }
   }
 }
