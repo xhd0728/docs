@@ -9,9 +9,9 @@ icon: "file-magnifying-glass"
 
 ## 步骤 1：编写 Pipeline YAML 文件
 
-在 `examples/` 目录下新建一个 YAML 文件（如 corpus_index.yaml），内容如下：
+在 `examples/` 目录下新建一个 YAML 文件（如 `corpus_index.yaml`），内容如下：
 
-```yaml
+```yaml examples/corpus_index.yaml icon="/images/yaml.svg"
 # MCP Server
 servers:
   retriever: servers/retriever
@@ -34,7 +34,7 @@ ultrarag build examples/corpus_index.yaml
 
 随后会生成一个参数配置文件，可根据具体需求修改对应字段。例如：
 
-```yaml
+```yaml examples/parameter/corpus_index_parameter.yaml icon="/images/yaml.svg"
 retriever:
   corpus_path: data/sample_hotpotqa_corpus_5.jsonl       # 输入语料路径（JSONL 格式）
   retriever_path: openbmb/MiniCPM-Embedding-Light        # 检索模型名称或路径

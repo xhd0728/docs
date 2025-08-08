@@ -25,7 +25,7 @@ Vanilla RAG 的最基本流程如下：
 
 首先准备 Prompt 模板文件 `prompt/qa_boxed.jinja`：
 
-```jinja prompt/qa_boxed.jinja
+```jinja prompt/qa_boxed.jinja icon="/images/jinja.svg"
 Please answer the following question.
 Think step by step.
 Provide your final answer in the format \boxed{YOUR_ANSWER}.
@@ -124,7 +124,7 @@ ultrarag build examples/vanilla_rag.yaml
 
 打开生成的 `examples/parameter/vanilla_rag_parameter.yaml`，修改如下配置：
 
-```yaml
+```yaml examples/parameter/vanilla_rag_parameter.yaml icon="/images/yaml.svg"
 benchmark:
   benchmark:
     key_map:

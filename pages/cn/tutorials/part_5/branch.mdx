@@ -38,7 +38,7 @@ Search-o1 的核心思想是让大模型在推理过程中自主判断何时缺�
 
 首先，在 `prompt/search_o1_reasoning.jinja` 中定义提示模板，样例如下：
 
-```jinja prompt/search_o1_reasoning.jinja
+```jinja prompt/search_o1_reasoning.jinja icon="/images/jinja.svg"
 You are a reasoning assistant with the ability to perform web searches to help you answer the user’s question
 accurately. You have special tools:
 To perform a search: write <|begin_search_query|> your query here <|end_search_query|>.
@@ -87,7 +87,7 @@ def search_o1_init(
 
 请新建模板 `prompt/search_o1_refinement.jinja`，示例如下：
 
-```jinja prompt/search_o1_refinement.jinja
+```jinja prompt/search_o1_refinement.jinja icon="/images/jinja.svg" expandable
 **Task Instruction:**
 
 You are tasked with reading and analyzing web pages based on the following inputs: **Previous Reasoning Steps**, **Current Search Query**, and **Searched Web Pages**. Your objective is to extract relevant and helpful information for **Current Search Query** from the **Searched Web Pages** and seamlessly integrate this information into the **Previous Reasoning Steps** to continue reasoning for the original question.
