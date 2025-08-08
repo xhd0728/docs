@@ -109,10 +109,7 @@
       "view",
       "chatgpt",
       "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
+      "perplexity"
     ]
   },
   "footer": {
@@ -126,6 +123,11 @@
     },
     "gtm": {
       "tagId": "GTM-5KL4LNM2"
+    }
+  },
+  "errors": {
+    "404": {
+      "redirect": true
     }
   }
 }
