@@ -117,6 +117,10 @@
       "github": "https://github.com/ultrarag/UltraRAG-MCP"
     }
   },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
   "integrations": {
     "ga4": {
       "measurementId": "G-S6SKS1CJRG"
