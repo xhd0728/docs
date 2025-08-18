@@ -86,7 +86,21 @@
                   }
                 ]
               }
-            ]
+            ] 
+          },
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "RAG Servers",
+                "pages": [
+                  "pages/cn/api/benchmark",
+                  "pages/cn/api/retriever",
+                  "pages/cn/api/generation",
+                  "pages/cn/api/evaluation"
+                ]
+              }
+            ] 
           }
         ]
       }
