@@ -1,0 +1,50 @@
+---
+title: "Project Introduction"
+icon: "hand-wave"
+---
+
+## UltraRAG 2.0
+
+UltraRAG 2.0 (UR-2.0) is the first lightweight RAG system construction framework designed based on the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/overview) architecture, aiming to provide efficient modeling support for scientific exploration scenarios. It standardizes and encapsulates the core components of RAG (such as [Retriever](/pages/cn/tutorials/part_1/retriever), [Generation](/pages/cn/tutorials/part_1/generation), etc.) into independent MCP Servers, and realizes flexible invocation and functional expansion through function-level Tool interfaces. With the MCP Client as the process scheduler, developers only need to write concise YAML files to efficiently build reasoning workflows supporting complex control structures such as serial, loop, and conditional branches, significantly reducing the technical threshold and learning cost for building and debugging complex RAG systems.
+
+<p align="center">
+  <img src="/images/getting_started/intro.png" width="70%" />
+</p>
+<Columns cols={2}>
+
+  <Card title="Pipeline">
+    The user-defined workflow file written in YAML, used to describe the calling sequence and execution logic of various components and tools.
+  </Card>
+  <Card title="Client">
+    The central scheduler of the workflow, responsible for parsing the Pipeline and uniformly coordinating the execution and calling order of Tools in each Server.
+  </Card>
+</Columns>
+
+<Columns cols={2}>
+  <Card title="Data">
+    Provides a unified data management mechanism, supporting reading and writing of variables, and continuously saving intermediate states in the workflow, facilitating multi-turn reasoning and context reuse.
+  </Card>
+  <Card title="Server">
+    Contains all independently callable functional modules. Developers can conveniently add new functions or modules through standardized interfaces, achieving flexible expansion and efficient combination of the system.
+  </Card>
+</Columns>
+
+In addition, UR-2.0 has a built-in ToolCall feature, which supports developers to directly call the tool functions provided by UltraRAG without modifying the original code structure, achieving seamless integration and flexible expansion. The framework also provides a complete set of teaching examples from beginner to advanced levels, built-in 17 mainstream benchmark tasks and various high-quality baselines, combined with a unified evaluation system and knowledge base support, significantly improving system development efficiency and experiment reproducibility.
+
+## Why UltraRAG 2.0?
+
+RAG systems are evolving from the early simple mode of module chaining to a complex system relying on model-driven reasoning, dynamic retrieval, and conditional judgment. Traditional frameworks have difficulty meeting the needs of multi-turn interaction and information update in such systems in terms of flexibility and scalability. Meanwhile, existing open-source implementations generally lack a unified paradigm; different baseline modules are heavily coupled and loosely structured, posing great challenges for understanding, reproducing, and comparative research.
+
+To address these challenges, UltraRAG 2.0 aims to provide:
+
+<Card title="🚀 Low-code construction of complex Pipelines">
+  Natively supports reasoning control structures such as serial, loop, and conditional branches. Developers only need to write YAML files and customize dozens of lines of code to realize complex iterative RAG workflows (such as [Search-o1](/pages/cn/tutorials/part_5/branch)).
+</Card>
+
+<Card title="⚡ Fast reproduction and functional expansion">
+  Based on the MCP architecture, all modules are encapsulated as independent and reusable Servers, supporting users to customize Servers as needed or reuse existing modules. Each Server’s functions are registered as function-level Tools; adding new functions only requires adding one function to access the complete workflow. Additionally, UR-2.0 supports calling external MCP Servers, easily expanding Pipeline capabilities and application scenarios.
+</Card>
+
+<Card title="📊 Unified evaluation and comparison">
+  Built-in standardized evaluation processes and metric management, supporting 17 mainstream scientific [Benchmark](/pages/cn/tutorials/part_3/reproduction) tasks out of the box and extensible, continuously integrating the latest baselines, providing [Leaderboard](https://pbem31gvoj.feishu.cn/sheets/TfbisiADfhOpnnt9wBhcE5gsn4o?from=from_copylink&sheet=4d3449) results, facilitating systematic research and optimization.
+</Card>
