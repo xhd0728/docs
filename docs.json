@@ -203,6 +203,10 @@
   "navbar": {
     "links": [
       {
+        "label": "Home",
+        "href": "https://ultrarag.github.io/project/"
+      },
+      {
         "label": "Datasets",
         "href": "https://huggingface.co/datasets/msss123/msssssragdata123123"
       },
